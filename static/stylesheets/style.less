@@ -1,0 +1,53 @@
+@webfiddle-blue: #5168a2;
+@webfiddle-light-blue: #00B7FF;
+
+body {
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.main-header {
+    color: @webfiddle-blue;
+    background-color: #f5f5f5;
+    span {
+        color: @webfiddle-light-blue;
+    }
+}
+
+.main-header_heading {
+    top: -7px;
+    position: relative;
+    padding: 10px;
+    padding-top: 50px;
+    font-family: consolas, Courier, monospace;
+    display: inline;
+}
+
+.main-content {
+    min-height: 40px;
+    width: 100%;
+    height: 300px;
+}
+
+a {
+    color: @webfiddle-blue;
+    &:hover {
+        color: @webfiddle-light-blue;
+    }
+}
+
+.code-editor {
+    height: 100%;
+}
+
+.CodeMirror {
+    height: 100%;
+}
+.CodeMirror-scroll {
+    padding: 0;
+}
+
+.CodeMirror-gutters {
+    height: 100% !important;
+}

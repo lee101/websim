@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<head>
+    <title>
+        {{ title }}
+    </title>
+
+    {% include 'templates/global/jsincludes.jinja2' %}
+    {% include 'templates/global/cssincludes.jinja2' %}
+</head>
+
+<body>
+<div class="main-header">
+    {% include 'templates/header.jinja2' %}
+</div>
+<div id="main-content" class="main-content">
+    {% block content %}
+    {% endblock %}
+</div>
+</body>
+
+</html>
