@@ -19,8 +19,8 @@ Ext.onReady(function () {
             {
                 region: 'west',
                 collapsible: true,
-                layout: 'absolute',
-                title: 'Starts at width 30%',
+//                layout: 'absolute',
+                title: 'Options',
                 split: true,
                 width: '20%',
                 minWidth: 100,
@@ -28,11 +28,31 @@ Ext.onReady(function () {
                 bodyPadding: 10,
                 stateId: 'westRegion',
                 stateful: true,
-                html: '<div style="position:absolute;bottom:10px;right:10px;">' +
-                    'west<br>I am floatable and stateful!</div>',
+                html: '',
                 items: [
                     {
-                        xtype: 'regionsetter'
+                        xtype: 'textfield',
+                        allowBlank: true,
+                        name: 'title',
+                        vtype: 'text',
+                        width: '100%',
+                        emptyText: 'name your fiddle'
+                    },
+                    {
+                        xtype: 'textarea',
+                        allowBlank: true,
+                        name: 'description',
+                        vtype: 'text',
+                        width: '100%',
+                        emptyText: 'description'
+                    },
+                    {
+                        xtype: 'textfield',
+                        allowBlank: true,
+                        name: 'url',
+                        vtype: 'url',
+                        width: '100%',
+                        emptyText: 'starting url'
                     }
                 ],
                 tools: [
@@ -61,16 +81,18 @@ Ext.onReady(function () {
                 width: '40%',
                 minWidth: 120,
                 minHeight: 140,
-                tools: [{
-                    xtype: 'textfield',
+                tools: [
+                    {
+                        xtype: 'textfield',
 //                    fieldLabel: 'URL',
-                    allowBlank: false,
-                    name: 'first',
-                    anchor: '95%',
-                    width: '100%',
-                    vtype: 'url',
-                    emptyText: 'http://www.google.com/*'
-                }],
+                        allowBlank: false,
+                        name: 'first',
+                        anchor: '95%',
+                        width: '100%',
+                        vtype: 'url',
+                        emptyText: 'http://www.google.com'
+                    }
+                ],
 //                title: '<input type="text" placeholder="www.google.com/*" /> ',
                 title: 'URL',
                 layout: {

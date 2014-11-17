@@ -229,6 +229,7 @@ class MirrorHandler(BaseHandler):
       self.response.headers["cache-control"] = \
         "max-age=%d" % EXPIRATION_DELTA_SECONDS
 
+    # TODO rewrite data here
     self.response.out.write(content.data)
 
 ###############################################################################

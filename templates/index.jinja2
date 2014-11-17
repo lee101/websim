@@ -1,5 +1,11 @@
 {% extends 'templates/layout.jinja2' %}
 
+
+{% block jsheaders %}
+    <script>
+        window.currentWebFiddle = {{ json.dumps(fiddle) }};
+    </script>
+{% endblock %}
 {% block content %}
 {% endblock %}
 

@@ -35,12 +35,24 @@ var main = (function ($) {
         var refreshUI = function() {
             setMainHeight();
             viewport.doLayout()
-
         };
 
         $(window).resize(refreshUI);
         refreshUI();
 
+        $('#save').on('click', function (evt) {
+            var $el = $(evt.target);
+//            window.jsEditor.
+//            content = GETCONTENT
+            var script = '';
+            var style = '';
+
+            var script_language = 'js';
+            var style_language = 'css';
+
+
+
+        })
     };
 
     self.addEditorCompletion = function(editor) {

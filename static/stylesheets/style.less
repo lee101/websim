@@ -1,5 +1,7 @@
-@webfiddle-blue: #5168a2;
-@webfiddle-light-blue: #00B7FF;
+@import "lesshat";
+
+@import "variables";
+@import "mixins";
 
 body {
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -50,4 +52,22 @@ a {
 
 .CodeMirror-gutters {
     height: 100% !important;
+}
+
+.header-btn {
+    display: inline-block;
+    vertical-align: top;
+    padding: 18px;
+
+    font-size: 16px;
+    text-decoration: none;
+    &:hover, &:focus {
+        color: white;
+        background-color: @webfiddle-blue;
+    }
+    .fa {
+        font-size: 23px;
+    }
+
+    .transition(all 0.3s ease-in);
 }

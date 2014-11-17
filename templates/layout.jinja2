@@ -6,7 +6,11 @@
     </title>
 
     {% include 'templates/global/jsincludes.jinja2' %}
+    {% block jsheaders %}
+    {% endblock %}
     {% include 'templates/global/cssincludes.jinja2' %}
+    {% block cssheaders %}
+    {% endblock %}
 </head>
 
 <body>
