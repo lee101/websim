@@ -1,9 +1,0 @@
-### Upgrade Cadence and Proof
-
-Proof has changed. It's scaffold is simpler. It doesn't support the concept of cleanups, but it encourages the concept of cleanups, so I've implemented them directly in `write.t.js`.
-
-### Issue by Issue
-
- * Upgrade Proof to 0.0.50. #30.
- * Upgrade Cadence to 0.0.43. #29.
- * Upgrade Proof to 0.0.49. #28.

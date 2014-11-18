@@ -24,6 +24,14 @@ var main = (function ($) {
 
         }, defaultCodeMirrorOptions));
 
+        Inlet(jsEditor);
+        Inlet(cssEditor);
+
+        if (currentFiddle) {
+            jsEditor.setValue(currentFiddle.script);
+            cssEditor.setValue(currentFiddle.style);
+        }
+
         self.addEditorCompletion(jsEditor);
         self.addEditorCompletion(cssEditor);
 
@@ -54,7 +62,22 @@ var main = (function ($) {
                 description: $('[name="description"]').val(),
                 start_url: $('[name="starting_url"]').val()
             };
-            $.get('/createfiddle', )
+
+            $.ajax({
+                url: '/createfiddle',
+                data: currentFiddle,
+                success: function (data) {
+                    ;
+                },
+                "type": "GET",
+                "cache": false,
+                "error": function (xhr, error, thrown) {
+                    //flash msg
+
+                    if (error == "parsererror") {
+                    }
+                }
+            })
 
         })
     };

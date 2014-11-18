@@ -5,6 +5,7 @@ import os
 
 import webapp2
 import jinja2
+import fixtures
 
 from mirror.mirror import MirrorHandler
 from models import Fiddle
@@ -21,7 +22,8 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 class BaseHandler(webapp2.RequestHandler):
     def render(self, view_name, extraParams={}):
         template_values = {
-            'json': json
+            'json': json,
+            'fixtures': fixtures,
         }
         template_values.update(extraParams)
 
@@ -46,10 +48,10 @@ class CreateFiddleHandler(webapp2.RequestHandler):
         fiddle.script = self.request.get('script')
         fiddle.style = self.request.get('style')
 
-        fiddle.script_language = self.request.get('script_language')
-        fiddle.style_language = self.request.get('style_language')
+        fiddle.script_language = fixtures.SCRIPT_TYPES[self.request.get('script_language')]
+        fiddle.style_language = fixtures.STYLE_TYPES[self.request.get('style_language')]
 
-        self.render('templates/index.jinja2', {})
+        self.response.write('success')
 
 
 class GetFiddleHandler(BaseHandler):
