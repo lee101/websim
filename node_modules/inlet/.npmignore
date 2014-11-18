@@ -1,0 +1,11 @@
+/node_modules
+/.proof.out
+/coverage
+/t/tmp
+/t/fixtures/certs/*.pem
+/t/fixtures/certs/*.srl
+/t/fixtures/certs/ca2-database.txt*
+/t/fixtures/certs/ca2-serial
+/linux/configuration.sh
+.DS_Store
+.vagrant

@@ -32,7 +32,7 @@ var main = (function ($) {
             $('.main-content').height(mainHeight);
         };
 
-        var refreshUI = function() {
+        var refreshUI = function () {
             setMainHeight();
             viewport.doLayout()
         };
@@ -42,20 +42,24 @@ var main = (function ($) {
 
         $('#save').on('click', function (evt) {
             var $el = $(evt.target);
-//            window.jsEditor.
-//            content = GETCONTENT
-            var script = '';
-            var style = '';
 
-            var script_language = 'js';
-            var style_language = 'css';
+            var currentFiddle = {
+                script: window.jsEditor.getValue(),
+                style: window.cssEditor.getValue(),
 
+                script_language: 'js',
+                style_language: 'css',
 
+                title: $('[name="title"]').val(),
+                description: $('[name="description"]').val(),
+                start_url: $('[name="starting_url"]').val()
+            };
+            $.get('/createfiddle', )
 
         })
     };
 
-    self.addEditorCompletion = function(editor) {
+    self.addEditorCompletion = function (editor) {
         var times = 0;
         editor.on('keyup', function (codeMirror, event) {
             var isAlphabetical = event.which >= 65 && event.which <= 90;
@@ -70,8 +74,6 @@ var main = (function ($) {
             }
         })
     };
-
-
 
 
     return self;

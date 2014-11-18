@@ -34,6 +34,7 @@ Ext.onReady(function () {
                         xtype: 'textfield',
                         allowBlank: true,
                         name: 'title',
+                        id: 'title',
                         vtype: 'text',
                         width: '100%',
                         emptyText: 'name your fiddle'
@@ -42,6 +43,7 @@ Ext.onReady(function () {
                         xtype: 'textarea',
                         allowBlank: true,
                         name: 'description',
+                        id: 'description',
                         vtype: 'text',
                         width: '100%',
                         emptyText: 'description'
@@ -49,7 +51,8 @@ Ext.onReady(function () {
                     {
                         xtype: 'textfield',
                         allowBlank: true,
-                        name: 'url',
+                        name: 'starting_url',
+                        id: 'starting_url',
                         vtype: 'url',
                         width: '100%',
                         emptyText: 'starting url'

@@ -1,0 +1,29 @@
+[ req ]
+default_bits           = 1024
+days                   = 999
+distinguished_name     = req_distinguished_name
+attributes             = req_attributes
+prompt                 = no
+req_extensions         = v3_req
+
+x509_extensions        = v3_ca
+
+[ req_distinguished_name ]
+C                      = US
+ST                     = CA
+L                      = SF
+O                      = Wink
+OU                     = Wink Hub API
+CN                     = localhost
+emailAddress           = alan@prettyrobots.com
+
+[ req_attributes ]
+challengePassword      = A challenge password
+
+[ v3_req ]
+basicConstraints       = CA:TRUE
+subjectAltName         = IP:127.0.0.1
+
+[ v3_ca ]
+subjectKeyIdentifier   = hash
+authorityKeyIdentifier = keyid:always,issuer:always
