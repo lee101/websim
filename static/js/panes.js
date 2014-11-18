@@ -51,8 +51,8 @@ Ext.onReady(function () {
                     {
                         xtype: 'textfield',
                         allowBlank: true,
-                        name: 'starting_url',
-                        id: 'starting_url',
+                        name: 'start_url',
+                        id: 'start_url',
                         vtype: 'url',
                         width: '100%',
                         emptyText: 'starting url'
@@ -89,7 +89,7 @@ Ext.onReady(function () {
                         xtype: 'textfield',
 //                    fieldLabel: 'URL',
                         allowBlank: false,
-                        name: 'first',
+                        name: 'current_url',
                         anchor: '95%',
                         width: '100%',
                         vtype: 'url',

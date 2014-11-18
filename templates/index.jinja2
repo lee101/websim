@@ -4,8 +4,28 @@
 {% block jsheaders %}
     <script>
         window.currentWebFiddle = {{ json.dumps(fiddle) }};
+        window.fixtures = (function () {
+            var self = {};
+            self.SCRIPT_TYPES = {{ json.dumps(fixtures.SCRIPT_TYPES) }};
+            self.STYLE_TYPES = {{ json.dumps(fixtures.STYLE_TYPES) }};
+            return self;
+        })();
+        if (! currentWebFiddle) {
+            currentWebFiddle = {
+                style: 'body {\n' +
+                       '    background-color: skyblue;\n' +
+                       '}',
+                script: '',
+                style_language: fixtures.STYLE_TYPES['css'],
+                script_language: fixtures.SCRIPT_TYPES['js'],
+                title: 'cats',
+                description: 'cats via the cat api',
+                start_url: 'http://www.google.com'
+            }
+        }
     </script>
 {% endblock %}
+
 {% block content %}
 {% endblock %}
 

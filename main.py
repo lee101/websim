@@ -34,7 +34,7 @@ class BaseHandler(webapp2.RequestHandler):
 class MainHandler(BaseHandler):
     def get(self):
         self.render('templates/index.jinja2', {
-            'fiddle': {}
+            'fiddle': None
         })
 
 

@@ -27,9 +27,12 @@ var main = (function ($) {
         Inlet(jsEditor);
         Inlet(cssEditor);
 
-        if (currentFiddle) {
-            jsEditor.setValue(currentFiddle.script);
-            cssEditor.setValue(currentFiddle.style);
+        if (currentWebFiddle) {
+            jsEditor.setValue(currentWebFiddle.script);
+            cssEditor.setValue(currentWebFiddle.style);
+            options.setTitle(currentWebFiddle.title);
+            options.setDescription(currentWebFiddle.description);
+            options.setStartUrl(currentWebFiddle.start_url);
         }
 
         self.addEditorCompletion(jsEditor);
@@ -58,9 +61,9 @@ var main = (function ($) {
                 script_language: 'js',
                 style_language: 'css',
 
-                title: $('[name="title"]').val(),
-                description: $('[name="description"]').val(),
-                start_url: $('[name="starting_url"]').val()
+                title: options.getTitle(),
+                description: options.getDescription(),
+                start_url: options.getStartUrl()
             };
 
             $.ajax({

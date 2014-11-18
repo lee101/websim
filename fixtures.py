@@ -7,5 +7,5 @@ STYLE_TYPES = {
     'css': 0,
     'less': 1,
     'sass': 2,
-    }
+}
 
