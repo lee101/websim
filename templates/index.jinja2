@@ -10,12 +10,16 @@
             self.STYLE_TYPES = {{ json.dumps(fixtures.STYLE_TYPES) }};
             return self;
         })();
-        if (! currentWebFiddle) {
+        if (!currentWebFiddle) {
             currentWebFiddle = {
+                id: 'd8c4vu',
                 style: 'body {\n' +
-                       '    background-color: skyblue;\n' +
-                       '}',
-                script: '',
+                        '    background-color: skyblue;\n' +
+                        '}',
+                script: "// replace the first image we see with a cat" +
+                        "document.images[0].src = 'http://thecatapi.com/api/images/get?format=src&type=gif';" +
+                        "// replace the google logo with a cat" +
+                        "document.getElementById('lga').innerHTML = '<a href=\"http://thecatapi.com\"><img src=\"http://thecatapi.com/api/images/get?format=src&type=gif\"></a>';",
                 style_language: fixtures.STYLE_TYPES['css'],
                 script_language: fixtures.SCRIPT_TYPES['js'],
                 title: 'cats',

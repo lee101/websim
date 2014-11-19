@@ -11,5 +11,13 @@ window.webutils = (function () {
             return s4() + s4();
         };
     })();
+
+    self.removeProtocol = function (url) {
+        var protocolPos = url.indexOf('//');
+        if (protocolPos == -1) {
+            return url;
+        }
+        return url.substring(protocolPos + 2);
+    };
     return self;
 })();

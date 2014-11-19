@@ -84,6 +84,7 @@ Ext.onReady(function () {
                 width: '40%',
                 minWidth: 120,
                 minHeight: 140,
+                html: '<div id="web-frame" class="web-frame"></div>',
                 tools: [
                     {
                         xtype: 'textfield',
@@ -97,12 +98,7 @@ Ext.onReady(function () {
                     }
                 ],
 //                title: '<input type="text" placeholder="www.google.com/*" /> ',
-                title: 'URL',
-                layout: {
-                    type: 'vbox',
-                    padding: 5,
-                    align: 'stretch'
-                }
+                title: 'URL'
             }
         ]
     });

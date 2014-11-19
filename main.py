@@ -38,6 +38,11 @@ class MainHandler(BaseHandler):
         })
 
 
+class WarmupHandler(BaseHandler):
+    def get(self):
+        pass
+
+
 class CreateFiddleHandler(webapp2.RequestHandler):
     def get(self):
         fiddle = Fiddle()
@@ -77,10 +82,11 @@ class SlashMurdererApp(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
                                   ('/', MainHandler),
+                                  ('/_ah/warmup', WarmupHandler),
                                   ('(.*)/$', SlashMurdererApp),
                                   (r"/createfiddle", CreateFiddleHandler),
-                                  (r"/(.*)", GetFiddleHandler),
                                   (r"/(.*)/([^/]+).*", MirrorHandler),
+                                  (r"/(.*)", GetFiddleHandler),
 
 
                               ], debug=True)

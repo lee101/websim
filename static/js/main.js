@@ -35,8 +35,11 @@ var main = (function ($) {
             options.setStartUrl(currentWebFiddle.start_url);
         }
 
+        webFrame.setUp();
+
         self.addEditorCompletion(jsEditor);
         self.addEditorCompletion(cssEditor);
+
 
         var setMainHeight = function () {
             var mainHeight = $(window).height() - $('.main-header').height();

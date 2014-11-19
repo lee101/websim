@@ -38,8 +38,8 @@ import transform_content
 DEBUG = False
 EXPIRATION_DELTA_SECONDS = 3600
 
-# DEBUG = True
-# EXPIRATION_DELTA_SECONDS = 10
+DEBUG = True
+EXPIRATION_DELTA_SECONDS = 1
 
 HTTP_PREFIX = "http://"
 
@@ -64,7 +64,7 @@ TRANSFORMED_CONTENT_TYPES = frozenset([
   "text/css",
 ])
 
-MAX_CONTENT_SIZE = 10 ** 6
+MAX_CONTENT_SIZE = 10 ** 64
 
 ###############################################################################
 
@@ -192,25 +192,25 @@ class HomeHandler(BaseHandler):
 
 
 class MirrorHandler(BaseHandler):
-  def get(self, base_url):
+  def get(self, fiddle_name, base_url):
     if self.is_recursive_request():
       return
 
     assert base_url
+    base_url = fiddle_name + '/' + base_url
 
     # Log the user-agent and referrer, to see who is linking to us.
     logging.debug('User-Agent = "%s", Referrer = "%s"',
                   self.request.user_agent,
                   self.request.referer)
-    logging.debug('Base_url = "%s", url = "%s"', base_url, self.request.url)
 
     translated_address = self.get_relative_url()[1:]  # remove leading /
+    translated_address = translated_address[translated_address.index('/') + 1:]
     mirrored_url = HTTP_PREFIX + translated_address
 
     # Use sha256 hash instead of mirrored url for the key name, since key
     # names can only be 500 bytes in length; URLs may be up to 2KB.
     key_name = get_url_key_name(mirrored_url)
-    logging.info("Handling request for '%s' = '%s'", mirrored_url, key_name)
 
     content = MirroredContent.get_by_key_name(key_name)
     cache_miss = False
