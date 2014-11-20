@@ -85,7 +85,7 @@ app = webapp2.WSGIApplication([
                                   ('/_ah/warmup', WarmupHandler),
                                   ('(.*)/$', SlashMurdererApp),
                                   (r"/createfiddle", CreateFiddleHandler),
-                                  (r"/(.*)/([^/]+).*", MirrorHandler),
+                                  (r"/([^/]*)/([^/]+).*", MirrorHandler),
                                   (r"/(.*)", GetFiddleHandler),
 
 
