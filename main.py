@@ -8,7 +8,7 @@ import jinja2
 import fixtures
 from gameon_utils import GameOnUtils
 from mirror.mirror import MirrorHandler
-from models import Fiddle
+from models import Fiddle, default_fiddle
 
 
 config = {}
@@ -32,27 +32,8 @@ class BaseHandler(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
 
-default_fiddle = Fiddle()
-default_fiddle.id = 'd8c4vu'
-default_fiddle.style = 'body {\n' \
-          '    background-color: skyblue;\n' \
-          '}\n'
-
-default_fiddle.script = "// replace the first image we see with a cat\n" \
-           "document.images[0].src = 'http://thecatapi.com/api/images/get?format=src&type=gif';\n" \
-           "// replace the google logo with a cat\n" \
-           "document.getElementById('lga').innerHTML = '<a href=\"http://thecatapi.com\">" \
-           "<img src=\"http://thecatapi.com/api/images/get?format=src&type=gif\"></a>';\n"
-
-default_fiddle.style_language = fixtures.STYLE_TYPES['css']
-default_fiddle.script_language = fixtures.SCRIPT_TYPES['js']
-default_fiddle.title = 'cats'
-default_fiddle.description = 'cats via the cat api'
-default_fiddle.start_url = 'http://www.google.com'
-
 class MainHandler(BaseHandler):
     def get(self):
-
         self.render('templates/index.jinja2', {
             'fiddle': default_fiddle
         })
@@ -84,10 +65,7 @@ class CreateFiddleHandler(webapp2.RequestHandler):
 
 class GetFiddleHandler(BaseHandler):
     def get(self, fiddlekey):
-        if fiddlekey == 'd8c4vu':
-            current_fiddle = default_fiddle
-        else:
-            current_fiddle = Fiddle.byUrlKey(fiddlekey)
+        current_fiddle = Fiddle.byUrlKey(fiddlekey)
         self.render('templates/index.jinja2', {
             'fiddle': current_fiddle
         })
