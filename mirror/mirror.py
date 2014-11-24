@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from models import Fiddle
 
 __author__ = "Brett Slatkin (bslatkin@gmail.com)"
 
@@ -240,8 +241,13 @@ class MirrorHandler(BaseHandler):
             self.response.headers["cache-control"] = \
                 "max-age=%d" % EXPIRATION_DELTA_SECONDS
 
-        # TODO rewrite data here
+
         self.response.out.write(content.data)
+        # TODO rewrite data here
+        if content.headers['content-type'].startswith('text/html'):
+            fiddle = Fiddle.byUrlKey(fiddle_name)
+            self.response.out.write('<script id="webfiddle-js">' + fiddle.script + '</script>')
+            self.response.out.write('<style id="webfiddle-css">' + fiddle.style + '</style>')
 
 ###############################################################################
 

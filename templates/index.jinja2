@@ -3,30 +3,13 @@
 
 {% block jsheaders %}
     <script>
-        window.currentWebFiddle = {{ json.dumps(fiddle) }};
+        window.currentWebFiddle = {{ json.dumps(fiddle, cls=GameOnUtils.MyEncoder) }};
         window.fixtures = (function () {
             var self = {};
-            self.SCRIPT_TYPES = {{ json.dumps(fixtures.SCRIPT_TYPES) }};
-            self.STYLE_TYPES = {{ json.dumps(fixtures.STYLE_TYPES) }};
+            self.SCRIPT_TYPES = {{ json.dumps(fixtures.SCRIPT_TYPES, cls=GameOnUtils.MyEncoder) }};
+            self.STYLE_TYPES = {{ json.dumps(fixtures.STYLE_TYPES, cls=GameOnUtils.MyEncoder) }};
             return self;
         })();
-        if (!currentWebFiddle) {
-            currentWebFiddle = {
-                id: 'd8c4vu',
-                style: 'body {\n' +
-                        '    background-color: skyblue;\n' +
-                        '}',
-                script: "// replace the first image we see with a cat" +
-                        "document.images[0].src = 'http://thecatapi.com/api/images/get?format=src&type=gif';" +
-                        "// replace the google logo with a cat" +
-                        "document.getElementById('lga').innerHTML = '<a href=\"http://thecatapi.com\"><img src=\"http://thecatapi.com/api/images/get?format=src&type=gif\"></a>';",
-                style_language: fixtures.STYLE_TYPES['css'],
-                script_language: fixtures.SCRIPT_TYPES['js'],
-                title: 'cats',
-                description: 'cats via the cat api',
-                start_url: 'http://www.google.com'
-            }
-        }
     </script>
 {% endblock %}
 

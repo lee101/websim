@@ -54,7 +54,7 @@ var main = (function ($) {
         $(window).resize(refreshUI);
         refreshUI();
 
-        $('#save').on('click', function (evt) {
+        var saveFunc = function (evt) {
             var $el = $(evt.target);
 
             var currentFiddle = {
@@ -64,6 +64,7 @@ var main = (function ($) {
                 script_language: 'js',
                 style_language: 'css',
 
+                id: webutils.uid(),
                 title: options.getTitle(),
                 description: options.getDescription(),
                 start_url: options.getStartUrl()
@@ -84,8 +85,8 @@ var main = (function ($) {
                     }
                 }
             })
-
-        })
+        };
+        $('#save').on('click', saveFunc)
     };
 
     self.addEditorCompletion = function (editor) {

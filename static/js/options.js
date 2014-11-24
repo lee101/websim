@@ -17,7 +17,6 @@ var options = (function ($) {
         return $('[name="start_url"]').val();
     };
     self.setStartUrl = function (val) {
-        currentWebFiddle.start_url = val;
         return $('[name="start_url"]').val(val);
     };
 
