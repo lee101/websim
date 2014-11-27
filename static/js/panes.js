@@ -4,6 +4,16 @@ Ext.onReady(function () {
 
     Ext.state.Manager.setProvider(Ext.create('Ext.state.CookieProvider'));
 
+    Ext.apply(Ext.form.field.VTypes, {
+        omnibar: function (url) {
+            // validate url
+            // HEAD request ?
+            return /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(url);
+        },
+        omnibarText: 'Network error',
+        omnibarMask: /[\d\.]/i
+    });
+
     window.viewport = Ext.create('Ext.panel.Panel', {
         renderTo: Ext.Element.get('main-content'),
         height: '100%',

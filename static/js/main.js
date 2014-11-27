@@ -37,8 +37,8 @@ var main = (function ($) {
 
         webFrame.setUp();
 
-        self.addEditorCompletion(jsEditor);
-        self.addEditorCompletion(cssEditor);
+        self.addEditorCompletion(jsEditor, 'js');
+        self.addEditorCompletion(cssEditor, 'css');
 
 
         var setMainHeight = function () {
@@ -86,10 +86,15 @@ var main = (function ($) {
                 }
             })
         };
-        $('#save').on('click', saveFunc)
+        $('#save').on('click', saveFunc);
+        var shareFunction = function () {
+            webutils.showModal();
+        };
+        $('#share').on('click', shareFunction)
+
     };
 
-    self.addEditorCompletion = function (editor) {
+    self.addEditorCompletion = function (editor, type) {
         var times = 0;
         editor.on('keyup', function (codeMirror, event) {
             var isAlphabetical = event.which >= 65 && event.which <= 90;
@@ -101,6 +106,10 @@ var main = (function ($) {
             }
             if (times >= 2) {
                 editor.showHint({completeSingle: false});
+            }
+            //INJECT INTO IFRAME
+            if (type == 'css') {
+                webFrame.setCSS(editor.getValue());
             }
         })
     };

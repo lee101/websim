@@ -19,5 +19,30 @@ window.webutils = (function () {
         }
         return url.substring(protocolPos + 2);
     };
+
+    //Modals
+    self.modalHidden = true;
+    $(document).ready(function () {
+
+        var $modal = $('#modal');
+        $modal.on('hide.bs.modal', function (e) {
+            self.modalHidden = true;
+        });
+
+        $modal.on('show.bs.modal', function (e) {
+            self.modalHidden = false;
+        });
+    });
+    self.showModal = function () {
+        $('#modal').modal('show');
+    };
+    self.hideModal = function () {
+        $('#modal').modal('hide');
+    };
+    self.setModal = function (content) {
+        $('#modal').find('.modal-body').html(content);
+        self.showModal();
+    };
+
     return self;
 })();

@@ -1,0 +1,30 @@
+<p class="mm-sharing-btns">
+    {% set encoded_desc = '' -%}
+    {% set encoded_desc_short = '' -%}
+    Share <a href="#" class="facebook-share-btn" title="Share this fiddle"><i
+        class="fa fa-facebook-square mm-share-btn"></i> </a>
+    <a href="https://twitter.com/intent/tweet?url={{ urlencode(url) }}&text={{ encoded_desc_short }}"
+       target="_blank" rel="nofollow" title="Share this fiddle">
+        <i class="fa fa-twitter-square mm-share-btn mm-share-btn--twitter"></i>
+    </a>
+    <a href="https://pinterest.com/pin/create/bookmarklet/?url={{ urlencode(url) }}&description={{ encoded_desc }}"
+       target="_blank" rel="nofollow" title="Share this fiddle">
+        <i class="fa fa-pinterest-square mm-share-btn mm-share-btn--pinterest"></i>
+    </a>
+    <a href="https://plus.google.com/share?url={{ urlencode(url) }}"
+       target="_blank" rel="nofollow" title="Share this fiddle">
+        <i class="fa fa-google-plus-square mm-share-btn mm-share-btn--google-plus"></i>
+    </a>
+    <a href="http://www.linkedin.com/shareArticle?url={{ urlencode(url) }}&title={{ encoded_desc }}"
+       target="_blank" rel="nofollow" title="Share this fiddle">
+        <i class="fa fa-linkedin-square mm-share-btn mm-share-btn--linked-in"></i>
+    </a>
+    <a href="http://www.stumbleupon.com/submit?url={{ urlencode(url) }}&title={{ encoded_desc }}"
+       target="_blank" rel="nofollow" title="Share this fiddle">
+        <i class="fa fa-stumbleupon-circle mm-share-btn mm-share-btn--stumbleupon"></i>
+    </a>
+    <a href="http://reddit.com/submit?url={{ urlencode(url) }}&title={{ encoded_desc_short }}"
+       target="_blank" rel="nofollow" title="Share this fiddle">
+        <i class="fa fa-reddit mm-share-btn"></i>
+    </a>
+</p>
