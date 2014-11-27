@@ -93,6 +93,7 @@
                   "if in instanceof isnt new no not null of off on or return switch then throw true try typeof until void while with yes").split(" ");
 
   function getCompletions(token, context, keywords, options) {
+      var window = frames['web-iframe'].window;
     var found = [], start = token.string;
     function maybeAdd(str) {
       if (str.lastIndexOf(start, 0) == 0 && !arrayContains(found, str)) found.push(str);
@@ -132,8 +133,8 @@
       // (reading into JS mode internals to get at the local and global variables)
       for (var v = token.state.localVars; v; v = v.next) maybeAdd(v.name);
       for (var v = token.state.globalVars; v; v = v.next) maybeAdd(v.name);
-      if (!options || options.useGlobalScope !== false)
-        gatherCompletions(window);
+
+      gatherCompletions(window);
       forEach(keywords, maybeAdd);
     }
     return found;
