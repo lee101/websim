@@ -40,8 +40,8 @@ import transform_content
 DEBUG = False
 EXPIRATION_DELTA_SECONDS = 3600
 
-DEBUG = True
-EXPIRATION_DELTA_SECONDS = 1
+# DEBUG = True
+# EXPIRATION_DELTA_SECONDS = 1
 
 HTTP_PREFIX = "http://"
 

@@ -1,4 +1,8 @@
+import logging
+
 from google.appengine.ext import ndb
+
+from google.appengine.api import memcache
 
 import fixtures
 
@@ -34,11 +38,21 @@ class Fiddle(BaseModel):
         if urlkey.endswith('d8c4vu'):
             return default_fiddle
         else:
+
             urlkey_last_dash_pos = urlkey.rfind('-')
             if urlkey_last_dash_pos == -1:
                 urlkey_last_dash_pos = 0
             id = urlkey[urlkey_last_dash_pos:]
-            return cls.query(cls.id == id).get()
+
+            fiddle = memcache.get(urlkey)
+            if fiddle:
+                return fiddle
+            fiddle = cls.query(cls.id == id).get()
+            if fiddle:
+                if not memcache.add(id, fiddle, time=3600):
+                    logging.error('memcache.add failed: key_name = "%s", '
+                                  'original_url = "%s"', id, fiddle)
+            return fiddle
 
 
 default_fiddle = Fiddle()

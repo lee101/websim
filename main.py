@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import json
+import logging
 import os
+from google.appengine.api import memcache
 
 import webapp2
 import jinja2
@@ -59,6 +61,11 @@ class CreateFiddleHandler(webapp2.RequestHandler):
 
         fiddle.script_language = fixtures.SCRIPT_TYPES[self.request.get('script_language')]
         fiddle.style_language = fixtures.STYLE_TYPES[self.request.get('style_language')]
+
+        fiddle.put()
+        if not memcache.add(fiddle.id, fiddle, time=3600):
+            logging.error('memcache.add failed: key_name = "%s", '
+                          'original_url = "%s"', fiddle.id, fiddle)
 
         self.response.write('success')
 
