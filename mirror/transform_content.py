@@ -61,7 +61,7 @@ REPLACEMENT_REGEXES = [
     # Need this because HTML tags could end with '/>', which confuses the
     # tag-matching regex above, since that's the end-of-match signal.
     (TAG_START + ABSOLUTE_URL_REGEX,
-     "\g<tag>\g<equals>\g<quote>/\g<url>"),
+     "\g<tag>\g<equals>\g<quote>/%(fiddle)s/\g<url>"),
 
     (CSS_IMPORT_START + SAME_DIR_URL_REGEX,
      "@import\g<spacing>\g<quote>%(accessed_dir)s\g<url>"),
@@ -73,7 +73,7 @@ REPLACEMENT_REGEXES = [
      "@import\g<spacing>\g<quote>/%(base)s/\g<url>"),
 
     (CSS_IMPORT_START + ABSOLUTE_URL_REGEX,
-     "@import\g<spacing>\g<quote>/\g<url>"),
+     "@import\g<spacing>\g<quote>/%(fiddle)s/\g<url>"),
 
     (CSS_URL_START + SAME_DIR_URL_REGEX,
      "url(\g<quote>%(accessed_dir)s\g<url>"),
@@ -81,9 +81,11 @@ REPLACEMENT_REGEXES = [
     (CSS_URL_START + TRAVERSAL_URL_REGEX,
      "url(\g<quote>%(accessed_dir)s/\g<relative>/\g<url>"),
 
+    (CSS_URL_START + BASE_RELATIVE_URL_REGEX,
+     "url(\g<quote>/%(base)s/\g<url>"),
 
     (CSS_URL_START + ABSOLUTE_URL_REGEX,
-     "url(\g<quote>/\g<url>"),
+     "url(\g<quote>/%(fiddle)s/\g<url>"),
 ]
 
 ################################################################################
@@ -93,17 +95,10 @@ def TransformContent(base_url, root_url, accessed_url, content):
     accessed_dir = os.path.dirname(url_obj.path)
     if not accessed_dir.endswith("/"):
         accessed_dir += "/"
-    pattern, replacement = (CSS_URL_START + BASE_RELATIVE_URL_REGEX,
-                            "url(\g<quote>/%(base)s/\g<url>")
-
-    fixed_replacement = replacement % {
-        "base": root_url,
-        "accessed_dir": accessed_dir,
-    }
-    content = re.sub(pattern, fixed_replacement, content)
-
+    fiddle_name = base_url[:base_url.find('/')]
     for pattern, replacement in REPLACEMENT_REGEXES:
         fixed_replacement = replacement % {
+            "fiddle": fiddle_name,
             "base": base_url,
             "accessed_dir": accessed_dir,
         }

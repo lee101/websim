@@ -60,7 +60,7 @@ default_fiddle.style = 'body {\n' \
                        '}\n'
 
 default_fiddle.script = "// replace the first image we see with a cat\n" \
-                        "document.images[0].src = 'http://thecatapi.com/api/images/get?format=src&type=gif';\n" \
+                        "document.images[0].src = 'http://thecatapi.com/api/images/get?format=src&type=gif';\n\n" \
                         "// replace the google logo with a cat\n" \
                         "document.getElementById('lga').innerHTML = '<a href=\"http://thecatapi.com\">" \
                         "<img src=\"http://thecatapi.com/api/images/get?format=src&type=gif\"></a>';\n"
@@ -69,4 +69,4 @@ default_fiddle.style_language = fixtures.STYLE_TYPES['css']
 default_fiddle.script_language = fixtures.SCRIPT_TYPES['js']
 default_fiddle.title = 'cats'
 default_fiddle.description = 'cats via the cat api'
-default_fiddle.start_url = 'http://www.google.com'
+default_fiddle.start_url = 'www.google.com'
