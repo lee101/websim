@@ -63,7 +63,7 @@ Ext.onReady(function () {
                         allowBlank: true,
                         name: 'start_url',
                         id: 'start_url',
-                        vtype: 'url',
+//                        vtype: 'url',
                         width: '100%',
                         emptyText: 'starting url'
                     }
@@ -103,7 +103,7 @@ Ext.onReady(function () {
                         name: 'current_url',
                         anchor: '95%',
                         width: '100%',
-                        vtype: 'url',
+//                        vtype: 'url',
                         emptyText: 'http://www.google.com'
                     }
                 ],

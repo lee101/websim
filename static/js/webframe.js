@@ -4,7 +4,7 @@ var webFrame = (function ($) {
     self.setUp = function () {
         self.setUrl(currentWebFiddle.start_url);
         self.navigateTo(currentWebFiddle.start_url);
-        self.setUpNavBar();
+        self.setUpNavBar(currentWebFiddle.start_url);
     };
     self.setUrl = function (url) {
         $('[name="current_url"]').val(url);
@@ -15,12 +15,22 @@ var webFrame = (function ($) {
         url = url.substring(url.indexOf('/') + 1);
         return url;
     };
-    self.setUpNavBar = function () {
+    self.setUpNavBar = function (current_url) {
         var $navbar = $('[name="current_url"]');
-        $navbar.on('blur', function(evt) {
+        var previous_url = current_url;
+        var change = function (evt) {
             var url = $(evt.target).val();
-            self.navigateTo(url)
-        })
+            if (previous_url !== url) {
+                self.navigateTo(url);
+                previous_url = url;
+            }
+        };
+        $navbar.on('blur', change);
+        $navbar.keyup(function (e) {
+            if (e.keyCode == 13) {
+                change(e);
+            }
+        });
     };
 
     self.navigateTo = function(url) {
