@@ -3,7 +3,7 @@
 
 {% block jsheaders %}
     <script>
-        window.currentWebFiddle = {{ json.dumps(fiddle, cls=GameOnUtils.MyEncoder) }};
+        window.currentSavedFiddle = {{ json.dumps(fiddle, cls=GameOnUtils.MyEncoder) }};
         window.fixtures = (function () {
             var self = {};
             self.SCRIPT_TYPES = {{ json.dumps(fixtures.SCRIPT_TYPES, cls=GameOnUtils.MyEncoder) }};

@@ -1,10 +1,10 @@
 var webFrame = (function ($) {
     "use strict";
     var self = {};
-    self.setUp = function () {
-        self.setUrl(currentWebFiddle.start_url);
-        self.navigateTo(currentWebFiddle.start_url);
-        self.setUpNavBar(currentWebFiddle.start_url);
+    self.setUp = function (fiddle) {
+        self.setUrl(fiddle.start_url);
+        self.navigateTo(fiddle.start_url);
+        self.setUpNavBar(fiddle.start_url);
     };
     self.setUrl = function (url) {
         $('[name="current_url"]').val(url);
@@ -33,13 +33,14 @@ var webFrame = (function ($) {
         });
     };
 
-    self.navigateTo = function(url) {
+    self.navigateTo = function (url) {
         self.$frame = $('#web-frame');
         //TODO catch network error?
+
         self.$frame.html('<iframe id="web-iframe" name="web-iframe" class="web-iframe" ' +
             ' onLoad="webFrame.setUrl(webFrame.getPath(this.contentWindow.location.pathname))" ' +
 
-            'src="/' + currentWebFiddle.id + '/' + webutils.removeProtocol(url) + '"></iframe>');
+            'src="/' + currentSavedFiddle.id + '/' + webutils.removeProtocol(url) + '"></iframe>');
     };
 
     self.setCSS = function (css) {

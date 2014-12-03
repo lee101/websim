@@ -27,15 +27,9 @@ var main = (function ($) {
         Inlet(jsEditor);
         Inlet(cssEditor);
 
-        if (currentWebFiddle) {
-            jsEditor.setValue(currentWebFiddle.script);
-            cssEditor.setValue(currentWebFiddle.style);
-            options.setTitle(currentWebFiddle.title);
-            options.setDescription(currentWebFiddle.description);
-            options.setStartUrl(currentWebFiddle.start_url);
-        }
+        fiddle.setUp(currentSavedFiddle);
 
-        webFrame.setUp();
+        webFrame.setUp(currentSavedFiddle);
 
         self.addEditorCompletion(jsEditor, 'js');
         self.addEditorCompletion(cssEditor, 'css');
@@ -57,18 +51,7 @@ var main = (function ($) {
         var saveFunc = function (evt) {
             var $el = $(evt.target);
 
-            var currentFiddle = {
-                script: window.jsEditor.getValue(),
-                style: window.cssEditor.getValue(),
-
-                script_language: 'js',
-                style_language: 'css',
-
-                id: webutils.uid(),
-                title: options.getTitle(),
-                description: options.getDescription(),
-                start_url: options.getStartUrl()
-            };
+            var currentFiddle = fiddle.getCurrentFiddle();
 
             $.ajax({
                 url: '/createfiddle',
@@ -88,6 +71,12 @@ var main = (function ($) {
         };
         $('#save').on('click', saveFunc);
         var shareFunction = function () {
+            var currentFiddle = fiddle.getCurrentFiddle();
+
+            webutils.setModal(webutils.render('share-buttons.jinja2', {
+                encoded_desc_short: currentFiddle.title,
+                encoded_desc: currentFiddle.description
+            }));
             webutils.showModal();
         };
         $('#share').on('click', shareFunction)
