@@ -37,7 +37,9 @@ class BaseHandler(webapp2.RequestHandler):
 class MainHandler(BaseHandler):
     def get(self):
         self.render('templates/index.jinja2', {
-            'fiddle': default_fiddle
+            'fiddle': default_fiddle,
+            'title': 'Hack the web with WebFiddle!',
+            'description': 'Edit CSS and JavaScript of any and every Webpage! Share the results!'
         })
 
 
@@ -74,7 +76,9 @@ class GetFiddleHandler(BaseHandler):
     def get(self, fiddlekey):
         current_fiddle = Fiddle.byUrlKey(fiddlekey)
         self.render('templates/index.jinja2', {
-            'fiddle': current_fiddle
+            'fiddle': current_fiddle,
+            'title': current_fiddle.title,
+            'description': current_fiddle.description
         })
 
 

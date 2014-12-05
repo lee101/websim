@@ -5,9 +5,16 @@ api_version: 1
 threadsafe: yes
 
 handlers:
+
 - url: /favicon\.ico
   static_files: favicon.ico
   upload: favicon\.ico
+- url: /apple-touch-icon.png
+  static_files: static/images/apple-touch-icon.png
+  upload: static/images/apple-touch-icon.png
+- url: /BingSiteAuth.xml
+  static_files: static/BingSiteAuth.xml
+  upload: static/BingSiteAuth.xml
 
 - url: /static/*
   static_dir: static

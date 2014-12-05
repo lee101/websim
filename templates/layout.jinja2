@@ -1,9 +1,35 @@
 <!doctype html>
 <html>
 <head>
-    <title>
-        {{ title }}
-    </title>
+
+
+
+    <title>{{ title }}</title>
+    <meta name="description"
+          content="{{ description }}">
+
+    <meta name="keywords"
+          content="jsfiddle, javascript, css, html, editor, ide, greasemonkey">
+    <meta property="og:title" content="{{ title }}">
+    <meta property="og:url" content="{{ url }}">
+    <meta property="og:image"
+          content="http://www.webfiddle.com/static/images/webfiddle-logo128.png">
+    <meta property="og:description"
+          content="{{ description }}">
+
+    <meta property="og:type" content="site">
+    <meta property="og:site_name" content="WebFiddle">
+    <meta property="fb:admins" content="337972272904903">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@LeeLeePenkman">
+    <meta name="twitter:title" content="{{ title }}">
+    <meta name="twitter:description" content="{{ description }}">
+    <meta name="twitter:image"
+          content="/static/images/webfiddle-icon256.png">
 
     {% include 'templates/global/jsincludes.jinja2' %}
     {% block jsheaders %}
