@@ -1,13 +1,10 @@
 @import "lesshat";
-
 @import "../bower_components/bootstrap/less/variables";
 @import "../bower_components/bootstrap/less/mixins";
-
 @import "../bower_components/bootstrap/less/modals";
 @import "../bower_components/bootstrap/less/close";
 @import "variables";
 @import "mixins";
-
 
 * {
     font-family: consolas, monospace
@@ -94,15 +91,15 @@ a {
 }
 
 .mm-sharing-btns {
-    .font-size(1.9)
+    .font-size(1.9);
+    a {
+        text-decoration: none;
+    }
 }
 
 .mm-share-btn {
     margin-top: 10px;
     font-size: @base-font-size *2;
-    a {
-        text-decoration: none;
-    }
 }
 
 .mm-share-btn--twitter {

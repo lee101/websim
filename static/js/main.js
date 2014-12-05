@@ -57,7 +57,7 @@ var main = (function ($) {
                 url: '/createfiddle',
                 data: currentFiddle,
                 success: function (data) {
-                    history.replaceState({}, 'fiddle', '/' + currentFiddle.title + '-' + currentFiddle.id);
+                    history.replaceState({}, 'fiddle', '/' + webutils.urlencode(currentFiddle.title) + '-' + currentFiddle.id);
                 },
                 "type": "GET",
                 "cache": false,

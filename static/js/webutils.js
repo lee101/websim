@@ -1,5 +1,13 @@
 window.webutils = (function () {
     var self = {};
+
+    self.urlencode = function (name) {
+        return name.replace(/\s/g, '-')
+            .replace(/[\.\t\,\:;\(\)'@!\\\?#/<>&]/g, '')
+            .replace(/[^\x00-\x7F]/g, "")
+            .toLowerCase();
+    };
+
     self.uid = (function () {
         function s4() {
             return Math.floor((1 + Math.random()) * 0x10000)

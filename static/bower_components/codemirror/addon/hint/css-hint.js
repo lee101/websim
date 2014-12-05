@@ -35,6 +35,10 @@
     }
 
     var st = inner.state.state;
+      if (st == "top"){
+          add({body: 1});
+      }
+
     if (st == "pseudo" || token.type == "variable-3") {
       add(pseudoClasses);
     } else if (st == "block" || st == "maybeprop") {
@@ -47,7 +51,6 @@
       add(spec.mediaFeatures);
     }
     else{
-
     }
 
     if (result.length) return {
