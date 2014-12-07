@@ -54,6 +54,7 @@ Ext.onReady(function () {
                         allowBlank: true,
                         name: 'fiddle_description',
                         id: 'description',
+                        title: 'description',
                         vtype: 'text',
                         width: '100%',
                         emptyText: 'description'

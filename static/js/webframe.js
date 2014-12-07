@@ -37,10 +37,21 @@ var webFrame = (function ($) {
         self.$frame = $('#web-frame');
         //TODO catch network error?
 
-        self.$frame.html('<iframe id="web-iframe" name="web-iframe" class="web-iframe" ' +
-            ' onLoad="webFrame.setUrl(webFrame.getPath(this.contentWindow.location.pathname))" ' +
+        self.$frame.html('<div id="web-iframe-loading" class="web-iframe-loading"><i class="web-bigspinner fa fa-spinner fa-spin"></i> </div>' +
+            '<iframe id="web-iframe" name="web-iframe" class="web-iframe" ' +
+            ' onLoad="webFrame.onFrameLoad(this)" ' +
 
             'src="/' + currentSavedFiddle.id + '/' + webutils.removeProtocol(url) + '"></iframe>');
+    };
+
+    self.reload = function () {
+        $('#web-iframe-loading').css({'display': ''});
+        frames['web-iframe'].window.location.reload();
+    };
+
+    self.onFrameLoad = function (iframe) {
+        webFrame.setUrl(webFrame.getPath(iframe.contentWindow.location.pathname));
+        $('#web-iframe-loading').hide();
     };
 
     self.setCSS = function (css) {

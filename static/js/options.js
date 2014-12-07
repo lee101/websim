@@ -6,6 +6,10 @@ var options = (function ($) {
         self.$fiddleDescription = $('[name="fiddle_description"]');
         self.$startUrl = $('[name="start_url"]');
 
+        self.$fiddleTitle.attr('title', 'Title');
+        self.$fiddleDescription.attr('title', 'Description');
+        self.$startUrl.attr('title', 'Starting URL');
+
         self.$fiddleTitle.focus();
         window.setTimeout(function () {
             self.$fiddleTitle.select();
