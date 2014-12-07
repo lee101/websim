@@ -20,9 +20,7 @@ var fiddle = (function ($) {
         if (fiddle) {
             jsEditor.setValue(fiddle.script);
             cssEditor.setValue(fiddle.style);
-            options.setTitle(fiddle.title);
-            options.setDescription(fiddle.description);
-            options.setStartUrl(fiddle.start_url);
+            options.setUp(fiddle);
         }
     };
 

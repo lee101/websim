@@ -1,23 +1,37 @@
 var options = (function ($) {
     "use strict";
     var self = {};
+    self.setUp = function (fiddle) {
+        self.$fiddleTitle = $('[name="fiddle_title"]');
+        self.$fiddleDescription = $('[name="fiddle_description"]');
+        self.$startUrl = $('[name="start_url"]');
+
+        self.$fiddleTitle.focus();
+        window.setTimeout(function () {
+            self.$fiddleTitle.select();
+        }, 100);
+
+        self.setTitle(fiddle.title);
+        self.setDescription(fiddle.description);
+        self.setStartUrl(fiddle.start_url);
+    };
     self.getTitle = function () {
-        return $('[name="fiddle_title"]').val();
+        return self.$fiddleTitle.val();
     };
     self.setTitle = function (val) {
-        return $('[name="fiddle_title"]').val(val);
+        return self.$fiddleTitle.val(val);
     };
     self.getDescription = function () {
-        return $('[name="fiddle_description"]').val();
+        return self.$fiddleDescription.val();
     };
     self.setDescription = function (val) {
-        return $('[name="fiddle_description"]').val(val);
+        return self.$fiddleDescription.val(val);
     };
     self.getStartUrl = function () {
-        return $('[name="start_url"]').val();
+        return self.$startUrl.val();
     };
     self.setStartUrl = function (val) {
-        return $('[name="start_url"]').val(val);
+        return self.$startUrl.val(val);
     };
 
     return self;
