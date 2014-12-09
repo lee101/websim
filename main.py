@@ -27,6 +27,7 @@ class BaseHandler(webapp2.RequestHandler):
             'json': json,
             'fixtures': fixtures,
             'GameOnUtils': GameOnUtils,
+            'url': self.request.url,
         }
         template_values.update(extraParams)
 
