@@ -48,7 +48,11 @@ var main = (function ($) {
         $(window).resize(refreshUI);
         refreshUI();
 
-        var saveFunc = function (evt) {
+        var saveFunc = function (evt, callback) {
+            if (typeof callback == 'undefined') {
+                callback = function () {
+                }
+            }
             var $el = $(evt.target);
 
             var currentFiddle = fiddle.getCurrentFiddle();
@@ -57,7 +61,12 @@ var main = (function ($) {
                 url: '/createfiddle',
                 data: currentFiddle,
                 success: function (data) {
-                    history.replaceState({}, 'fiddle', '/' + webutils.urlencode(currentFiddle.title) + '-' + currentFiddle.id);
+
+                    if (data === "success") {
+                        fiddle.setSavedFiddle(currentFiddle);
+                        history.replaceState({}, 'fiddle', '/' + webutils.urlencode(currentFiddle.title) + '-' + currentFiddle.id);
+                        callback()
+                    }
                 },
                 "type": "GET",
                 "cache": false,
@@ -67,19 +76,28 @@ var main = (function ($) {
                     if (error == "parsererror") {
                     }
                 }
-            })
+            });
+            return false;
         };
         $('#save').on('click', saveFunc);
         var shareFunction = function () {
-            var currentFiddle = fiddle.getCurrentFiddle();
+            var currentFiddle = fiddle.getSavedFiddle();
 
             webutils.setModal(webutils.render('share-buttons.jinja2', {
                 encoded_desc_short: currentFiddle.title,
                 encoded_desc: currentFiddle.description
             }));
             webutils.showModal();
+            return false;
         };
-        $('#share').on('click', shareFunction)
+        $('#share').on('click', shareFunction);
+        var runFunction = function (evt) {
+            saveFunc(evt, function () {
+                webFrame.navigateTo(fiddle.getSavedFiddle());
+            });
+            return false;
+        };
+        $('#webfiddle_run').on('click', runFunction);
 
     };
 

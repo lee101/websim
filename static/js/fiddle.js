@@ -15,6 +15,16 @@ var fiddle = (function ($) {
             start_url: options.getStartUrl()
         };
     };
+    self.getSavedFiddle = function () {
+        if (!self.savedFiddle) {
+            return savedWebFiddle;
+        } else {
+            return self.savedFiddle
+        }
+    };
+    self.setSavedFiddle = function (fiddle) {
+        self.savedFiddle = fiddle;
+    }
 
     self.setUp = function (fiddle) {
         if (fiddle) {
