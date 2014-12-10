@@ -9,7 +9,7 @@ handlers:
 - url: /favicon\.ico
   static_files: static/favicon.ico
   upload: static/favicon.ico
-  
+
 - url: /apple-touch-icon.png
   static_files: static/images/apple-touch-icon.png
   upload: static/images/apple-touch-icon.png

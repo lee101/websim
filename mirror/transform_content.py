@@ -45,6 +45,13 @@ CSS_IMPORT_START = r"(?i)@import(?P<spacing>[\t ]+)(?P<quote>[\"']?)"
 # CSS url() call
 CSS_URL_START = r"(?i)\burl\((?P<quote>[\"']?)"
 
+GA_REGEX = (r'class="adsbygoogle[\s\S]*?>',
+            'class="adsbygoogle" style="display:block" '
+            'data-ad-client="ca-pub-7026363262140448" '
+            'data-ad-slot="9824934150" '
+            'data-ad-format="auto">'
+)
+
 REPLACEMENT_REGEXES = [
     (TAG_START + SAME_DIR_URL_REGEX,
      "\g<tag>\g<equals>\g<quote>%(accessed_dir)s\g<url>"),
@@ -86,6 +93,8 @@ REPLACEMENT_REGEXES = [
 
     (CSS_URL_START + ABSOLUTE_URL_REGEX,
      "url(\g<quote>/%(fiddle)s/\g<url>"),
+
+    GA_REGEX
 ]
 
 ################################################################################

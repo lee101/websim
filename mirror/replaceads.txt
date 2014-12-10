@@ -1,0 +1,41 @@
+
+responsive add
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- responsiveAd -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-7026363262140448"
+     data-ad-slot="9824934150"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+responsive add design mode
+
+<style>
+.responsivead { width: 320px; height: 50px; }
+@media(min-width: 500px) { .responsivead { width: 468px; height: 60px; } }
+@media(min-width: 800px) { .responsivead { width: 728px; height: 90px; } }
+</style>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- responsiveAd -->
+<ins class="adsbygoogle responsivead"
+     style="display:inline-block"
+     data-ad-client="ca-pub-7026363262140448"
+     data-ad-slot="9824934150"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+160*600 add
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- word game vert -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:160px;height:600px"
+     data-ad-client="ca-pub-7026363262140448"
+     data-ad-slot="3713734958"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
