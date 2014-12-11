@@ -17,14 +17,14 @@ var fiddle = (function ($) {
     };
     self.getSavedFiddle = function () {
         if (!self.savedFiddle) {
-            return savedWebFiddle;
+            return currentSavedFiddle;
         } else {
             return self.savedFiddle
         }
     };
     self.setSavedFiddle = function (fiddle) {
         self.savedFiddle = fiddle;
-    }
+    };
 
     self.setUp = function (fiddle) {
         if (fiddle) {
