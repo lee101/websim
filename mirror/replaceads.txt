@@ -39,3 +39,8 @@ responsive add design mode
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
+
+TODO replace content urls
+<meta property="og:url" content="http://localhost:8080/">
+<meta name="twitter:image"
+          content="/static/images/webfiddle-icon256.png">

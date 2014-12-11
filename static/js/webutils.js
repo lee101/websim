@@ -1,6 +1,18 @@
 window.webutils = (function () {
     var self = {};
 
+    var loadingElToIconMap = {};
+    self.setIconLoading = function ($el) {
+        loadingElToIconMap[$el] = $el.find('i').attr('class');
+        $el.attr('disabled', 'disabled')
+            .find('i').attr('class', 'fa fa-spinner fa-spin');
+    };
+    self.setIconDone = function ($el) {
+        $el.removeAttr('disabled')
+            .find('i').attr('class', loadingElToIconMap[$el]);
+        delete loadingElToIconMap[$el];
+    };
+
     self.urlencode = function (name) {
         return name.replace(/\s/g, '-')
             .replace(/[\.\t\,\:;\(\)'@!\\\?#/<>&]/g, '')

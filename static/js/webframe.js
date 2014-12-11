@@ -24,7 +24,7 @@ var webFrame = (function ($) {
         var change = function (evt) {
             var url = $(evt.target).val();
             if (previous_url !== url) {
-                self.navigateTo(url);
+                self.navigateTo(fiddle.getSavedFiddle(), url);
                 previous_url = url;
             }
         };

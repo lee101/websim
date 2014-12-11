@@ -53,7 +53,7 @@ var main = (function ($) {
                 callback = function () {
                 }
             }
-            var $el = $(evt.target);
+            webutils.setIconLoading($('#save'));
 
             var currentFiddle = fiddle.getCurrentFiddle();
 
@@ -63,6 +63,7 @@ var main = (function ($) {
                 success: function (data) {
 
                     if (data === "success") {
+                        webutils.setIconDone($('#save'));
                         fiddle.setSavedFiddle(currentFiddle);
                         history.replaceState({}, 'fiddle', '/' + webutils.urlencode(currentFiddle.title) + '-' + currentFiddle.id);
                         callback()
@@ -80,6 +81,11 @@ var main = (function ($) {
             return false;
         };
         $('#save').on('click', saveFunc);
+        $(document).on('keydown', function (event) {
+            if(event.which >= 83 && event.ctrlKey) {
+                saveFunc();
+            }
+        });
         var shareFunction = function () {
             var currentFiddle = fiddle.getSavedFiddle();
 
@@ -92,7 +98,11 @@ var main = (function ($) {
         };
         $('#share').on('click', shareFunction);
         var runFunction = function (evt) {
+            webutils.setIconLoading($('#webfiddle_run'));
+
             saveFunc(evt, function () {
+                webutils.setIconDone($('#webfiddle_run'));
+
                 webFrame.navigateTo(fiddle.getSavedFiddle());
             });
             return false;
