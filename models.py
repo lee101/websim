@@ -42,7 +42,7 @@ class Fiddle(BaseModel):
             urlkey_last_dash_pos = urlkey.rfind('-')
             id = urlkey[urlkey_last_dash_pos + 1:]
 
-            fiddle = memcache.get(urlkey)
+            fiddle = memcache.get(id)
             if fiddle:
                 return fiddle
             fiddle = cls.query(cls.id == id).get()
