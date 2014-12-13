@@ -141,7 +141,11 @@ class MirroredContent(object):
             status=response.status_code,
             headers=adjusted_headers,
             data=content)
-        if not memcache.add(key_name, new_content, time=EXPIRATION_DELTA_SECONDS):
+        try:
+            if not memcache.add(key_name, new_content, time=EXPIRATION_DELTA_SECONDS):
+                logging.error('memcache.add failed: key_name = "%s", '
+                              'original_url = "%s"', key_name, mirrored_url)
+        except ValueError:
             logging.error('memcache.add failed: key_name = "%s", '
                           'original_url = "%s"', key_name, mirrored_url)
 
