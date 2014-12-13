@@ -108,7 +108,11 @@ var main = (function ($) {
             return false;
         };
         $('#webfiddle_run').on('click', runFunction);
-
+        $(document).on('keydown', function (event) {
+            if (event.which >= 13 && event.ctrlKey) {
+                saveFunc();
+            }
+        });
     };
 
     self.addEditorCompletion = function (editor, type) {
