@@ -23,9 +23,10 @@ body {
 .main-header {
     color: @webfiddle-blue;
     background-color: #f5f5f5;
-    span {
-        color: @webfiddle-light-blue;
-    }
+}
+
+.webfiddle-light-blue {
+    color: @webfiddle-light-blue;
 }
 
 .main-header_heading {
@@ -70,6 +71,7 @@ a {
     display: inline-block;
     vertical-align: top;
     padding: 18px;
+    width: 75px;
 
     position: relative;
     font-size: 16px;
@@ -96,6 +98,8 @@ a {
     a {
         text-decoration: none;
     }
+    margin-top: 0;
+    margin-bottom: 50px;
 }
 
 .mm-share-btn {
@@ -127,6 +131,10 @@ a {
     color: @stumble-upon-orange;
 }
 
+.mm-share-btn--hackernews {
+    color: @ycombinator-orange;
+}
+
 .web-iframe-loading {
     height: 100%;
     width: 100%;
@@ -137,11 +145,14 @@ a {
         display: table-cell;
     }
 }
+
 .web-bigspinner {
     font-size: 30px;
 }
 
 .web-extra {
     position: absolute;
-
+}
+.webfiddle-share-link {
+    width: 80%;
 }

@@ -47,7 +47,7 @@ var webFrame = (function ($) {
             '<iframe id="web-iframe" name="web-iframe" class="web-iframe" ' +
             ' onLoad="webFrame.onFrameLoad(this)" ' +
 
-            'src="/' + fiddle.id + '/' + webutils.removeProtocol(url) + '"></iframe>');
+            'src="/' + fiddle.title + '-' + fiddle.id + '/' + webutils.removeProtocol(url) + '"></iframe>');
     };
 
     self.reload = function () {

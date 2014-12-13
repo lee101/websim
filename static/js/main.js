@@ -82,17 +82,26 @@ var main = (function ($) {
         };
         $('#save').on('click', saveFunction);
         $(document).on('keydown', function (event) {
-            if(event.which >= 83 && event.ctrlKey) {
+            if (event.which == 83 && event.ctrlKey) {
                 saveFunction();
             }
         });
         var shareFunction = function () {
             var currentFiddle = fiddle.getSavedFiddle();
 
-            webutils.setModal(webutils.render('share-buttons.jinja2', {
-                encoded_desc_short: currentFiddle.title,
-                encoded_desc: currentFiddle.description
-            }));
+            webutils.setModal(
+                '<h3>Editor Link: <input class="webfiddle-share-link x-form-field x-form-text" type="text" value="' + window.location.href + '"></h3>' +
+                    webutils.render('share-buttons.jinja2', {
+                        encoded_desc_short: currentFiddle.title,
+                        encoded_desc: currentFiddle.description
+                    }) +
+                    '<h3>Fullscreen Link: <input class="webfiddle-share-link x-form-field x-form-text" type="text" value="' + fiddle.getFullScreenUrl(currentFiddle) + '"></h3>' +
+                    webutils.render('share-buttons.jinja2', {
+                        url: fiddle.getFullScreenUrl(currentFiddle),
+                        encoded_desc_short: currentFiddle.title,
+                        encoded_desc: currentFiddle.description
+                    })
+            );
             webutils.showModal();
             return false;
         };
@@ -109,7 +118,7 @@ var main = (function ($) {
         };
         $('#webfiddle_run').on('click', runFunction);
         $(document).on('keydown', function (event) {
-            if (event.which >= 13 && event.ctrlKey) {
+            if (event.which == 13 && event.ctrlKey) {
                 runFunction();
             }
         });

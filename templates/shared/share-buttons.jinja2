@@ -1,5 +1,5 @@
 <p class="mm-sharing-btns">
-    Share <a href="#" class="facebook-share-btn" title="Share this fiddle"><i
+    <a href="#" class="facebook-share-btn" title="Share this fiddle"><i
         class="fa fa-facebook-square mm-share-btn"></i> </a>
     <a href="https://twitter.com/intent/tweet?url={{ urlencode(url) }}&text={{ encoded_desc_short }}"
        target="_blank" rel="nofollow" title="Share this fiddle">
@@ -24,5 +24,9 @@
     <a href="http://reddit.com/submit?url={{ urlencode(url) }}&title={{ encoded_desc_short }}"
        target="_blank" rel="nofollow" title="Share this fiddle">
         <i class="fa fa-reddit mm-share-btn"></i>
+    </a>
+    <a href="http://news.ycombinator.com/submit?url={{ urlencode(url) }}&title={{ encoded_desc_short }}"
+       target="_blank" rel="nofollow" title="Share this fiddle">
+        <i class="fa fa-hacker-news mm-share-btn mm-share-btn--hackernews"></i>
     </a>
 </p>

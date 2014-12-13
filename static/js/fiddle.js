@@ -22,6 +22,11 @@ var fiddle = (function ($) {
             return self.savedFiddle
         }
     };
+
+    self.getFullScreenUrl = function (fiddle) {
+        return window.location.origin + '/' + fiddle.title + '-' + fiddle.id + '/' + webutils.removeProtocol(fiddle.start_url);
+    };
+
     self.setSavedFiddle = function (fiddle) {
         self.savedFiddle = fiddle;
     };

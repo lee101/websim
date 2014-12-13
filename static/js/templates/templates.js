@@ -3,7 +3,7 @@ var lineno = null;
 var colno = null;
 var output = "";
 try {
-output += "<p class=\"mm-sharing-btns\">\n    Share <a href=\"#\" class=\"facebook-share-btn\" title=\"Share this fiddle\"><i class=\"fa fa-facebook-square mm-share-btn\"></i> </a>\n    <a href=\"https://twitter.com/intent/tweet?url=";
+output += "<p class=\"mm-sharing-btns\">\n    <a href=\"#\" class=\"facebook-share-btn\" title=\"Share this fiddle\"><i class=\"fa fa-facebook-square mm-share-btn\"></i> </a>\n    <a href=\"https://twitter.com/intent/tweet?url=";
 output += runtime.suppressValue((lineno = 2, colno = 60, runtime.callWrap(runtime.contextOrFrameLookup(context, frame, "urlencode"), "urlencode", [runtime.contextOrFrameLookup(context, frame, "url")])), env.autoesc);
 output += "&text=";
 output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "encoded_desc_short"), env.autoesc);
@@ -25,7 +25,11 @@ output += "\" target=\"_blank\" rel=\"nofollow\" title=\"Share this fiddle\">\n 
 output += runtime.suppressValue((lineno = 17, colno = 52, runtime.callWrap(runtime.contextOrFrameLookup(context, frame, "urlencode"), "urlencode", [runtime.contextOrFrameLookup(context, frame, "url")])), env.autoesc);
 output += "&title=";
 output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "encoded_desc_short"), env.autoesc);
-output += "\" target=\"_blank\" rel=\"nofollow\" title=\"Share this fiddle\">\n        <i class=\"fa fa-reddit mm-share-btn\"></i>\n    </a>\n</p>";
+output += "\" target=\"_blank\" rel=\"nofollow\" title=\"Share this fiddle\">\n        <i class=\"fa fa-reddit mm-share-btn\"></i>\n    </a>\n    <a href=\"http://news.ycombinator.com/submit?url=";
+output += runtime.suppressValue((lineno = 20, colno = 62, runtime.callWrap(runtime.contextOrFrameLookup(context, frame, "urlencode"), "urlencode", [runtime.contextOrFrameLookup(context, frame, "url")])), env.autoesc);
+output += "&title=";
+output += runtime.suppressValue(runtime.contextOrFrameLookup(context, frame, "encoded_desc_short"), env.autoesc);
+output += "\" target=\"_blank\" rel=\"nofollow\" title=\"Share this fiddle\">\n        <i class=\"fa fa-hacker-news mm-share-btn mm-share-btn--hackernews\"></i>\n    </a>\n</p>";
 cb(null, output);
 ;
 } catch (e) {
