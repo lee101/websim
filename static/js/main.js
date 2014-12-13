@@ -48,7 +48,7 @@ var main = (function ($) {
         $(window).resize(refreshUI);
         refreshUI();
 
-        var saveFunc = function (evt, callback) {
+        var saveFunction = function (evt, callback) {
             if (typeof callback == 'undefined') {
                 callback = function () {
                 }
@@ -80,10 +80,10 @@ var main = (function ($) {
             });
             return false;
         };
-        $('#save').on('click', saveFunc);
+        $('#save').on('click', saveFunction);
         $(document).on('keydown', function (event) {
             if(event.which >= 83 && event.ctrlKey) {
-                saveFunc();
+                saveFunction();
             }
         });
         var shareFunction = function () {
@@ -100,7 +100,7 @@ var main = (function ($) {
         var runFunction = function (evt) {
             webutils.setIconLoading($('#webfiddle_run'));
 
-            saveFunc(evt, function () {
+            saveFunction(evt, function () {
                 webutils.setIconDone($('#webfiddle_run'));
 
                 webFrame.navigateTo(fiddle.getSavedFiddle());
@@ -110,7 +110,7 @@ var main = (function ($) {
         $('#webfiddle_run').on('click', runFunction);
         $(document).on('keydown', function (event) {
             if (event.which >= 13 && event.ctrlKey) {
-                saveFunc();
+                runFunction();
             }
         });
     };
