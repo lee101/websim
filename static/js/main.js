@@ -42,10 +42,11 @@ var main = (function ($) {
 
         var refreshUI = function () {
             setMainHeight();
-            viewport.doLayout()
+            viewport.doLayout();
         };
 
         $(window).resize(refreshUI);
+        window.setTimeout(refreshUI, 2000);
         refreshUI();
 
         var saveFunction = function (evt, callback) {
@@ -103,6 +104,10 @@ var main = (function ($) {
                     })
             );
             webutils.showModal();
+            $('.webfiddle-share-link').eq(0).focus();
+            window.setTimeout(function () {
+                $('.webfiddle-share-link').eq(0).select();
+            }, 100);
             return false;
         };
         $('#share').on('click', shareFunction);
