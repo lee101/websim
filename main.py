@@ -39,8 +39,8 @@ class MainHandler(BaseHandler):
     def get(self):
         self.render('templates/index.jinja2', {
             'fiddle': default_fiddle,
-            'title': 'Hack the web with WebFiddle!',
-            'description': 'Edit CSS and JavaScript of any and every Webpage! Share the results!'
+            'title': 'Warp the web with WebFiddle!', #'Hack the web with WebFiddle!',
+            'description': 'Edit CSS and JavaScript of any and every web page! Share the results!'
         })
 
 
