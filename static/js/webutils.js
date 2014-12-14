@@ -2,14 +2,16 @@ window.webutils = (function () {
     var self = {};
 
     var loadingElToIconMap = {};
-    self.setIconLoading = function ($el) {
-        loadingElToIconMap[$el] = $el.find('i').attr('class');
+    self.setIconLoading = function (el) {
+        var $el = $(el);
+        loadingElToIconMap[el] = $el.find('i').attr('class');
         $el.attr('disabled', 'disabled')
             .find('i').attr('class', 'fa fa-spinner fa-spin');
     };
-    self.setIconDone = function ($el) {
+    self.setIconDone = function (el) {
+        var $el = $(el);
         $el.removeAttr('disabled')
-            .find('i').attr('class', loadingElToIconMap[$el]);
+            .find('i').attr('class', loadingElToIconMap[el]);
         delete loadingElToIconMap[$el];
     };
 
