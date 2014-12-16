@@ -56,7 +56,8 @@ var webFrame = (function ($) {
     };
 
     self.onFrameLoad = function (iframe) {
-        webFrame.setUrl(webFrame.getPath(iframe.contentWindow.location.pathname) + iframe.contentWindow.location.search);
+        webFrame.setUrl(webFrame.getPath(iframe.contentWindow.location.pathname) +
+            iframe.contentWindow.location.search + iframe.contentWindow.location.hash);
         $('#web-iframe-loading').hide();
     };
 
