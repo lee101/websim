@@ -35,8 +35,34 @@
     }
 
     var st = inner.state.state;
-      if (st == "top"){
-          add({body: 1});
+      if (st == "top") {
+          var w = frames['web-iframe'].window;
+
+          var ids = {};
+          var classes = {};
+          var elements = w.document.getElementsByTagName("*");
+          for (var i = 0; i < elements.length; i++) {
+              var el = elements[i];
+              var current_classes = el.className.split(' ');
+              for (var j = 0; j < current_classes.length; j++) {
+                  var current_class = current_classes[j];
+                  if (current_class) {
+                      classes[current_class] = 1;
+                  }
+              }
+              var current_id = el.id;
+              if (current_id) {
+                  ids[current_id] = 1;
+              };
+          }
+          if (token.string.length > 0 && token.string[0] == '#') {
+              add(ids);
+          }
+          else if(token.string.length > 0 && token.string[0] == '.') {
+              add(classes);
+          } else {
+              add({body: 1});
+          }
       }
 
     if (st == "pseudo" || token.type == "variable-3") {
