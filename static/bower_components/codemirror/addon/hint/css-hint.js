@@ -61,8 +61,9 @@
               add(ids);
           }
           else if(token.string.length > 0 && token.string[0] == '.') {
-              word = token.string.substring(1);
-              start = 1;
+              var lastDotPos = token.string.lastIndexOf('.') + 1;
+              word = token.string.substring(lastDotPos);
+              start = start - word.length;
               add(classes);
           } else {
               word = token.string;
