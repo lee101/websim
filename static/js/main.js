@@ -131,15 +131,19 @@ var main = (function ($) {
 
     self.addEditorCompletion = function (editor, type) {
         var times = 0;
-        editor.on('keyup', function (codeMirror, event) {
-            var isAlphabetical = event.which >= 65 && event.which <= 90;
+        editor.on('keypress', function (codeMirror, event) {
+            var isAlphabetical = event.which >= 97 && event.which <= 122;
             if (isAlphabetical) {
-                times++
+                times++;
             }
             else {
-                times = 0
+                times = 0;
             }
-            if (times >= 2) {
+            var hashKey = (event.which == 35 && event.shiftKey);
+            var dotKey = event.which == 46;
+            var show = hashKey || dotKey;
+            //51 shift  190
+            if (times >= 1 || show) {
                 editor.showHint({completeSingle: false});
             }
             //INJECT INTO IFRAME

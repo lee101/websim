@@ -53,14 +53,20 @@
               var current_id = el.id;
               if (current_id) {
                   ids[current_id] = 1;
-              };
+              }
           }
           if (token.string.length > 0 && token.string[0] == '#') {
+              word = token.string.substring(1);
+              start = 1;
               add(ids);
           }
           else if(token.string.length > 0 && token.string[0] == '.') {
+              word = token.string.substring(1);
+              start = 1;
               add(classes);
           } else {
+              word = token.string;
+
               add({body: 1});
           }
       }
