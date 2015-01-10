@@ -60,6 +60,7 @@ IGNORE_HEADERS = frozenset([
     "transfer-encoding",
     "upgrade",
     "x-frame-options",
+    "content-security-policy",
 ])
 
 TRANSFORMED_CONTENT_TYPES = frozenset([
