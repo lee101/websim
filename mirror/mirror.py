@@ -272,6 +272,18 @@ class MirrorHandler(BaseHandler):
     ga('send', 'pageview');
 
 </script>
+<div style="min-width:400px;min-height:400px;width:100%">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- responsiveAd -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-7026363262140448"
+         data-ad-slot="9824934150"
+         data-ad-format="auto"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
             """)
 
 ###############################################################################
