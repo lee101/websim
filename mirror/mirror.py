@@ -16,18 +16,13 @@ from models import Fiddle
 
 __author__ = "Brett Slatkin (bslatkin@gmail.com)"
 
-import datetime
 import hashlib
 import logging
-import pickle
 import re
-import time
 import urllib
-import wsgiref.handlers
 
 from google.appengine.api import memcache
 from google.appengine.api import urlfetch
-from google.appengine.ext import db
 import webapp2
 from google.appengine.ext.webapp import template
 from google.appengine.runtime import apiproxy_errors
@@ -35,7 +30,7 @@ from google.appengine.runtime import apiproxy_errors
 import transform_content
 
 
-###############################################################################
+# ##############################################################################
 
 DEBUG = False
 EXPIRATION_DELTA_SECONDS = 3600
@@ -201,6 +196,32 @@ class HomeHandler(BaseHandler):
         self.response.out.write(template.render("main.html", context))
 
 
+add_code = """<div style="min-width:400px;min-height:120px;width:100%">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- responsiveAd -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-7026363262140448"
+         data-ad-slot="9824934150"
+         data-ad-format="auto"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>"""
+big_add_code = """<div style="min-width:400px;min-height:400px;width:100%">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- responsiveAd -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-7026363262140448"
+         data-ad-slot="9824934150"
+         data-ad-format="auto"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>"""
+
+
 class MirrorHandler(BaseHandler):
     def get(self, fiddle_name, base_url):
         if self.is_recursive_request():
@@ -248,12 +269,15 @@ class MirrorHandler(BaseHandler):
                 "max-age=%d" % EXPIRATION_DELTA_SECONDS
 
 
-        self.response.out.write(content.data)
         # TODO rewrite data here
         if content.headers['content-type'].startswith('text/html'):
+            add_data = re.sub('(?P<tag><body[\w\W]*?>)', '\g<tag>' + add_code, content.data, 1)
+            self.response.out.write(add_data)
+
             fiddle = Fiddle.byUrlKey(fiddle_name)
             self.response.out.write('<script id="webfiddle-js">' + fiddle.script + '</script>')
             self.response.out.write('<style id="webfiddle-css">' + fiddle.style + '</style>')
+
             self.response.out.write("""
 <script>
     (function (i, s, o, g, r, a, m) {
@@ -272,20 +296,11 @@ class MirrorHandler(BaseHandler):
     ga('require', 'displayfeatures');
     ga('send', 'pageview');
 
-</script>
-<div style="min-width:400px;min-height:400px;width:100%">
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <!-- responsiveAd -->
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-7026363262140448"
-         data-ad-slot="9824934150"
-         data-ad-format="auto"></ins>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-</div>
-            """)
+</script>"""
+                                    +
+                                    (big_add_code))
+        else:
+            self.response.out.write(content.data)
 
 ###############################################################################
 

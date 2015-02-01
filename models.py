@@ -38,6 +38,7 @@ class Fiddle(BaseModel):
         if urlkey.endswith('d8c4vu'):
             return default_fiddle
         else:
+            #TODO save in memcache by urlkey
 
             urlkey_last_dash_pos = urlkey.rfind('-')
             id = urlkey[urlkey_last_dash_pos + 1:]
