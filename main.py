@@ -75,6 +75,7 @@ class CreateFiddleHandler(webapp2.RequestHandler):
 
 class GetFiddleHandler(BaseHandler):
     def get(self, fiddlekey):
+        #TODO something smart with referrer to check if this is a js request we should proxy
         current_fiddle = Fiddle.byUrlKey(fiddlekey)
         self.render('templates/index.jinja2', {
             'fiddle': current_fiddle,

@@ -41,6 +41,8 @@ class Fiddle(BaseModel):
             #TODO save in memcache by urlkey
 
             urlkey_last_dash_pos = urlkey.rfind('-')
+            if urlkey_last_dash_pos == -1:
+                return None
             id = urlkey[urlkey_last_dash_pos + 1:]
 
             fiddle = memcache.get(id)
