@@ -226,6 +226,8 @@ class MirrorHandler(BaseHandler):
     def get(self, fiddle_name, base_url):
         if self.is_recursive_request():
             return
+        if fiddle_name.rfind('-') == -1:
+            return self.error(500)
 
         assert base_url
 
