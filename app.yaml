@@ -39,9 +39,9 @@ libraries:
 - name: jinja2
   version: "2.6"
 
-instance_class: F2
+instance_class: F1
 automatic_scaling:
-  max_pending_latency: 7.5s
+  max_pending_latency: 15s
 # automatic_scaling:
 #   min_idle_instances: 2
 #   max_pending_latency: 4.5s

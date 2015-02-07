@@ -273,7 +273,7 @@ class MirrorHandler(BaseHandler):
 
         # TODO rewrite data here
         if content.headers['content-type'].startswith('text/html'):
-            add_data = re.sub('(?P<tag><body[\w\W]*?>)', '\g<tag>' + add_code, content.data, 1)
+            add_data = re.sub('(?P<tag><body[\w\W]*?>)', '\g<tag>' + (add_code *2), content.data, 1)
             self.response.out.write(add_data)
 
             fiddle = Fiddle.byUrlKey(fiddle_name)
