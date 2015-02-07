@@ -196,7 +196,7 @@ class HomeHandler(BaseHandler):
         self.response.out.write(template.render("main.html", context))
 
 
-add_code = """<div style="min-width:400px;min-height:120px;width:100%">
+add_code = """<div style="min-width:400px;min-height:100px;width:100%">
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <!-- responsiveAd -->
     <ins class="adsbygoogle"
@@ -207,7 +207,7 @@ add_code = """<div style="min-width:400px;min-height:120px;width:100%">
     <script>
         (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
-</div>"""
+</div>""" * 2
 big_add_code = """<div style="min-width:400px;min-height:400px;width:100%">
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <!-- responsiveAd -->
@@ -273,7 +273,7 @@ class MirrorHandler(BaseHandler):
 
         # TODO rewrite data here
         if content.headers['content-type'].startswith('text/html'):
-            add_data = re.sub('(?P<tag><body[\w\W]*?>)', '\g<tag>' + (add_code *2), content.data, 1)
+            add_data = re.sub('(?P<tag><body[\w\W]*?>)', '\g<tag>' + add_code, content.data, 1)
             self.response.out.write(add_data)
 
             fiddle = Fiddle.byUrlKey(fiddle_name)
