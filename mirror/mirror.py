@@ -90,7 +90,7 @@ class MirroredContent(object):
         return memcache.get(key_name)
 
     @staticmethod
-    def fetch_and_store(key_name, base_url, root_url, translated_address, mirrored_url):
+    def fetch_and_store(key_name, base_url, translated_address, mirrored_url):
         """Fetch and cache a page.
 
         Args:
@@ -104,7 +104,6 @@ class MirroredContent(object):
           A new MirroredContent object, if the page was successfully retrieved.
           None if any errors occurred or the content could not be retrieved.
         """
-        logging.debug("Fetching '%s'", mirrored_url)
         try:
             response = urlfetch.fetch(mirrored_url)
         except (urlfetch.Error, apiproxy_errors.Error):
@@ -122,13 +121,13 @@ class MirroredContent(object):
         for content_type in TRANSFORMED_CONTENT_TYPES:
             # startswith() because there could be a 'charset=UTF-8' in the header.
             if page_content_type.startswith(content_type):
-                content = transform_content.TransformContent(base_url, root_url, mirrored_url,
+                content = transform_content.TransformContent(base_url, mirrored_url,
                                                              content)
                 break
 
-        # If the transformed content is over 1MB, truncate it (yikes!)
+        # If the transformed content is over MAX_CONTENT_SIZE, truncate it (yikes!)
         if len(content) > MAX_CONTENT_SIZE:
-            logging.warning("Content is over 1MB; truncating")
+            logging.warning("Content is over MAX_CONTENT_SIZE; truncating")
             content = content[:MAX_CONTENT_SIZE]
 
         new_content = MirroredContent(
@@ -231,19 +230,7 @@ class MirrorHandler(BaseHandler):
 
         assert base_url
 
-        #TODO remove redundant root_url
-        url_find = base_url.find('/')
-        if url_find is -1:
-            root_url = base_url
-        else:
-            root_url = base_url[0:url_find]
         base_url = fiddle_name + '/' + base_url
-        root_url = fiddle_name + '/' + root_url
-
-        # Log the user-agent and referrer, to see who is linking to us.
-        logging.debug('User-Agent = "%s", Referrer = "%s"',
-                      self.request.user_agent,
-                      self.request.referer)
 
         translated_address = self.get_relative_url()[1:]  # remove leading /
         translated_address = translated_address[translated_address.index('/') + 1:]
@@ -254,11 +241,8 @@ class MirrorHandler(BaseHandler):
         key_name = get_url_key_name(mirrored_url)
 
         content = MirroredContent.get_by_key_name(key_name)
-        cache_miss = False
         if content is None:
-            logging.debug("Cache miss")
-            cache_miss = True
-            content = MirroredContent.fetch_and_store(key_name, base_url, root_url,
+            content = MirroredContent.fetch_and_store(key_name, base_url,
                                                       translated_address,
                                                       mirrored_url)
         if content is None:

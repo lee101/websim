@@ -99,7 +99,7 @@ REPLACEMENT_REGEXES = [
 
 ################################################################################
 
-def TransformContent(base_url, root_url, accessed_url, content):
+def TransformContent(base_url, accessed_url, content):
     url_obj = urlparse.urlparse(accessed_url)
     accessed_dir = os.path.dirname(url_obj.path)
     if not accessed_dir.endswith("/"):
