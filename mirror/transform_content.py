@@ -52,7 +52,7 @@ GA_REGEX = (r'class="adsbygoogle[\s\S]*?>',
             'data-ad-format="auto">'
 )
 
-REPLACEMENT_REGEXES = [
+UNCOMPILED_REGEXES = [
     (TAG_START + SAME_DIR_URL_REGEX,
      "\g<tag>\g<equals>\g<quote>%(accessed_dir)s\g<url>"),
 
@@ -96,6 +96,9 @@ REPLACEMENT_REGEXES = [
 
     GA_REGEX
 ]
+REPLACEMENT_REGEXES = []
+for reg, replace in UNCOMPILED_REGEXES:
+    REPLACEMENT_REGEXES.append((re.compile(reg), replace))
 
 ################################################################################
 

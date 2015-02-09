@@ -220,6 +220,21 @@ big_add_code = """<div style="min-width:400px;min-height:400px;width:100%">
     </script>
 </div>"""
 
+def request_blocker(fiddle_name):
+    return """
+<script>
+var oldOpen = XMLHttpRequest.prototype.open;
+XMLHttpRequest.prototype.open = function (method, url) {
+    if (/.*""" + fiddle_name + """.*/.test(url) || ((/.*http.*/.test(url) || /.*\/\/.*/.test(url)) && (url.indexOf(window.location.hostname) == -1))) {
+        oldOpen.apply(this, arguments);
+    }
+    else {
+        console.error("webfiddle doesn't support this type of request")
+    }
+}
+</script>
+"""
+
 
 class MirrorHandler(BaseHandler):
     def get(self, fiddle_name, base_url):
@@ -257,7 +272,8 @@ class MirrorHandler(BaseHandler):
 
         # TODO rewrite data here
         if content.headers['content-type'].startswith('text/html'):
-            add_data = re.sub('(?P<tag><body[\w\W]*?>)', '\g<tag>' + add_code, content.data, 1)
+            request_blocked_data = re.sub('(?P<tag><head[\w\W]*?>)', '\g<tag>' + request_blocker(fiddle_name), content.data, 1)
+            add_data = re.sub('(?P<tag><body[\w\W]*?>)', '\g<tag>' + add_code, request_blocked_data, 1)
             self.response.out.write(add_data)
 
             fiddle = Fiddle.byUrlKey(fiddle_name)
