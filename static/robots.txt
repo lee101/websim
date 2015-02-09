@@ -17,5 +17,5 @@ Disallow: /watch_fragments_ajax
 Disallow: /VacationRentalReview
 Disallow: /
 Allow: /$
-# Allow: /*-*/
+Allow: /*-*/
 Crawl-delay: 5
