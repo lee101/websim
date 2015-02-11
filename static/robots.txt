@@ -18,4 +18,3 @@ Disallow: /VacationRentalReview
 Disallow: /
 Allow: /$
 # Allow: /*-*/
-Crawl-delay: 5
