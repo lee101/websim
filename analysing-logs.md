@@ -43,3 +43,37 @@ Note: i found latency interesting but it turns out its not as related to cost as
 latency may mean your app is overloaded and requests are waiting before they get to your app.
 
 [webfiddle.net](http://webfiddle.net) is open source if you want to see how it works.
+
+
+-------
+
+favicons costing the most?
+
+    SELECT SUM(protoPayload.cost) as cost, protoPayload.resource, COUNT(protoPayload.resource) as times_requested, SUM(FLOAT(SUBSTR(protoPayload.latency, 0, LENGTH(protoPayload.latency) - 1))) as total_latency, AVG(FLOAT(SUBSTR(protoPayload.latency, 0, LENGTH(protoPayload.latency) - 1))) as average_latency, MAX(protoPayload.responseSize) as size 
+         FROM [webfiddlelogs.appengine_googleapis_com_request_log_20150205] 
+         GROUP BY protoPayload.resource
+         HAVING protoPayload.resource CONTAINS 'favicon'
+         ORDER BY cost DESC 
+         LIMIT 100;
+         
+total spend on favicon?
+
+    SELECT SUM(protoPayload.cost) as cost, protoPayload.resource, COUNT(protoPayload.resource) as times_requested, SUM(FLOAT(SUBSTR(protoPayload.latency, 0, LENGTH(protoPayload.latency) - 1))) as total_latency, AVG(FLOAT(SUBSTR(protoPayload.latency, 0, LENGTH(protoPayload.latency) - 1))) as average_latency, MAX(protoPayload.responseSize) as size 
+         FROM [webfiddlelogs.appengine_googleapis_com_request_log_20150205] 
+         WHERE protoPayload.resource CONTAINS 'favicon'
+         ORDER BY cost DESC 
+         LIMIT 100;
+total spend on gifs?
+
+    SELECT SUM(protoPayload.cost) as cost, COUNT(protoPayload.resource) as times_requested, SUM(FLOAT(SUBSTR(protoPayload.latency, 0, LENGTH(protoPayload.latency) - 1))) as total_latency, AVG(FLOAT(SUBSTR(protoPayload.latency, 0, LENGTH(protoPayload.latency) - 1))) as average_latency, MAX(protoPayload.responseSize) as largest_size, AVG(protoPayload.responseSize) as average_size 
+         FROM [webfiddlelogs.appengine_googleapis_com_request_log_20150205] 
+         WHERE protoPayload.resource CONTAINS 'gif'
+         ORDER BY cost DESC 
+         LIMIT 100;
+         
+total spend on jpgs (not jpegs)?
+    SELECT SUM(protoPayload.cost) as cost, COUNT(protoPayload.resource) as times_requested, SUM(FLOAT(SUBSTR(protoPayload.latency, 0, LENGTH(protoPayload.latency) - 1))) as total_latency, AVG(FLOAT(SUBSTR(protoPayload.latency, 0, LENGTH(protoPayload.latency) - 1))) as average_latency, MAX(protoPayload.responseSize) as largest_size, AVG(protoPayload.responseSize) as average_size, SUM(protoPayload.responseSize) as total_size 
+         FROM [webfiddlelogs.appengine_googleapis_com_request_log_20150205] 
+         WHERE protoPayload.resource CONTAINS 'jpg'
+         ORDER BY cost DESC 
+         LIMIT 100;
