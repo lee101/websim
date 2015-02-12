@@ -243,11 +243,14 @@ class MirrorHandler(BaseHandler):
         if fiddle_name.rfind('-') == -1:
             return self.error(500)
 
+
         assert base_url
 
         base_url = fiddle_name + '/' + base_url
 
         translated_address = self.get_relative_url()[1:]  # remove leading /
+        if translated_address.endswith('favicon.ico'):
+            return self.redirect('/favicon.ico', True)
         translated_address = translated_address[translated_address.index('/') + 1:]
         mirrored_url = HTTP_PREFIX + translated_address
 
