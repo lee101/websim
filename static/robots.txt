@@ -17,4 +17,4 @@ Disallow: /watch_fragments_ajax
 Disallow: /VacationRentalReview
 Disallow: /
 Allow: /$
-# Allow: /*-*/
+Allow: /*-*/
