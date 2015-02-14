@@ -195,29 +195,11 @@ class HomeHandler(BaseHandler):
         self.response.out.write(template.render("main.html", context))
 
 
-add_code = """<div style="min-width:400px;min-height:100px;width:100%">
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <!-- responsiveAd -->
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-7026363262140448"
-         data-ad-slot="9824934150"
-         data-ad-format="auto"></ins>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-</div>""" * 2
-big_add_code = """<div style="min-width:400px;min-height:400px;width:100%">
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <!-- responsiveAd -->
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-7026363262140448"
-         data-ad-slot="9824934150"
-         data-ad-format="auto"></ins>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+add_code = """<div style="min-width:600px;min-height:250px;width:100%">
+    <script id="mNCC" language="javascript">  medianet_width='600';  medianet_height= '250';  medianet_crid='275317118';  </script>  <script id="mNSC" src="http://contextual.media.net/nmedianet.js?cid=8CUV76NDB" language="javascript"></script>
+</div>"""
+big_add_code = """<div style="min-width:600px;min-height:250px;width:100%">
+    <script id="mNCC" language="javascript">  medianet_width='600';  medianet_height= '250';  medianet_crid='275317118';  </script>  <script id="mNSC" src="http://contextual.media.net/nmedianet.js?cid=8CUV76NDB" language="javascript"></script> 
 </div>"""
 
 def request_blocker(fiddle_name):
