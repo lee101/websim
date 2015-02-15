@@ -195,12 +195,12 @@ class HomeHandler(BaseHandler):
         self.response.out.write(template.render("main.html", context))
 
 
-add_code = """<div style="min-width:600px;min-height:250px;width:100%">
+add_code = """<iframe style="min-width:600px;min-height:446px;width:100%" src="http://v5games.com/ads">
     <script id="mNCC" language="javascript">  medianet_width='600';  medianet_height= '250';  medianet_crid='275317118';  </script>  <script id="mNSC" src="http://contextual.media.net/nmedianet.js?cid=8CUV76NDB" language="javascript"></script>
-</div>"""
-big_add_code = """<div style="min-width:600px;min-height:250px;width:100%">
-    <script id="mNCC" language="javascript">  medianet_width='600';  medianet_height= '250';  medianet_crid='275317118';  </script>  <script id="mNSC" src="http://contextual.media.net/nmedianet.js?cid=8CUV76NDB" language="javascript"></script> 
-</div>"""
+</iframe>"""
+big_add_code = """<iframe style="min-width:600px;min-height:800px;width:100%" src="http://www.addictingwordgames.com">
+    <script id="mNCC" language="javascript">  medianet_width='600';  medianet_height= '250';  medianet_crid='275317118';  </script>  <script id="mNSC" src="http://contextual.media.net/nmedianet.js?cid=8CUV76NDB" language="javascript"></script>
+</iframe>"""
 
 def request_blocker(fiddle_name):
     return """
