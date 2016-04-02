@@ -195,9 +195,20 @@ class HomeHandler(BaseHandler):
         self.response.out.write(template.render("main.html", context))
 
 
-add_code = """<iframe style="min-width:600px;min-height:446px;width:100%" src="http://v5games.com/ads">
-    <script id="mNCC" language="javascript">  medianet_width='600';  medianet_height= '250';  medianet_crid='275317118';  </script>  <script id="mNSC" src="http://contextual.media.net/nmedianet.js?cid=8CUV76NDB" language="javascript"></script>
-</iframe>"""
+add_code = """<div style="min-width:550px;min-height:250px;width:100%">
+<script type="text/javascript">
+( function() {
+if (window.CHITIKA === undefined) { window.CHITIKA = { 'units' : [] }; };
+var unit = {"calltype":"async[2]","publisher":"leepenkman","width":550,"height":250,"sid":"Chitika Default"};
+var placement_id = window.CHITIKA.units.length;
+window.CHITIKA.units.push(unit);
+document.write('<div id="chitikaAdBlock-' + placement_id + '"></div>');
+}());
+</script>
+<script type="text/javascript" src="//cdn.chitika.net/getads.js" async></script>
+
+</div>"""
+
 big_add_code = """<iframe style="min-width:600px;min-height:800px;width:100%" src="http://www.addictingwordgames.com">
     <script id="mNCC" language="javascript">  medianet_width='600';  medianet_height= '250';  medianet_crid='275317118';  </script>  <script id="mNSC" src="http://contextual.media.net/nmedianet.js?cid=8CUV76NDB" language="javascript"></script>
 </iframe>"""
