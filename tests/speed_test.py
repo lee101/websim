@@ -5,7 +5,7 @@ import requests
 class SpeedTest(unittest.TestCase):
 
     def test_speed(self):
-        for x in xrange(100):
+        for x in range(15):
             r = requests.get('http://localhost:8080/cats-d8c4vu/localhost:8080')
 
 
