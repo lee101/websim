@@ -44,7 +44,7 @@ var webFrame = (function ($) {
         //TODO catch network error?
 
         self.$frame.html('<div id="web-iframe-loading" class="web-iframe-loading"><i class="web-bigspinner fa fa-spinner fa-spin"></i> </div>' +
-            '<iframe id="web-iframe" name="web-iframe" class="web-iframe" ' +
+            '<iframe id="web-iframe" name="web-iframe" class="web-iframe" sandbox="allow-same-origin allow-scripts allow-forms allow-pointer-lock"' +
             ' onLoad="webFrame.onFrameLoad(this)" ' +
 
             'src="/' + fiddle.title + '-' + fiddle.id + '/' + webutils.removeProtocol(url) + '"></iframe>');
