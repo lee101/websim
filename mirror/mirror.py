@@ -56,6 +56,7 @@ IGNORE_HEADERS = frozenset([
     "upgrade",
     "x-frame-options",
     "content-security-policy",
+    "x-xss-protection",
 ])
 
 TRANSFORMED_CONTENT_TYPES = frozenset([
