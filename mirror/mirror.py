@@ -33,7 +33,7 @@ import transform_content
 # ##############################################################################
 
 DEBUG = False
-EXPIRATION_DELTA_SECONDS = 3600
+EXPIRATION_DELTA_SECONDS = 3600 * 24 * 30
 
 # DEBUG = True
 # EXPIRATION_DELTA_SECONDS = 1
