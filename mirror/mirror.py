@@ -206,7 +206,21 @@ def request_blocker(fiddle_name):
 <script>
 var oldOpen = XMLHttpRequest.prototype.open;
 XMLHttpRequest.prototype.open = function (method, url) {
+
+function getPosition(str, m, i) {
+   return str.split(m, i).join(m).length;
+}
     if (/.*""" + fiddle_name + """.*/.test(url) || ((/.*http.*/.test(url) || /.*\/\/.*/.test(url)) && (url.indexOf(window.location.hostname) == -1))) {
+        oldOpen.apply(this, arguments);
+    }
+    else if (/.*http.*/.test(url) || /.*\/\/.*/.test(url)) {
+        // TODO
+        oldOpen.apply(this, arguments);
+
+    }
+    else if (url.indexOf('/') == 0) {
+        var fiddle_domain = window.location.pathname.substring(0, getPosition(window.location.pathname, '/', 3))
+        url = fiddle_domain + url;
         oldOpen.apply(this, arguments);
     }
     else {
