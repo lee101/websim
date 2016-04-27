@@ -209,17 +209,25 @@ XMLHttpRequest.prototype.open = function (method, url) {
 
 function getPosition(str, m, i) {
    return str.split(m, i).join(m).length;
-}
-    if (/.*""" + fiddle_name + """.*/.test(url) || ((/.*http.*/.test(url) || /.*\/\/.*/.test(url)) && (url.indexOf(window.location.hostname) == -1))) {
+}	
+    var fiddle_name = '""" + fiddle_name + """';
+    var fiddle_domain = window.location.pathname.substring(0, getPosition(window.location.pathname, '/', 3))
+    if (url.indexOf(fiddle_name) != -1 || ((/.*http.*/.test(url) || /.*\/\/.*/.test(url)) && (url.indexOf(window.location.hostname) == -1))) {
         oldOpen.apply(this, arguments);
     }
     else if (/.*http.*/.test(url) || /.*\/\/.*/.test(url)) {
-        // TODO
-        oldOpen.apply(this, arguments);
-
+	var host_index = url.indexOf(window.location.host);
+        if (host_index != -1) {
+		//on our url needing fiddle name in the url
+		var start_url = url.slice(0, host_index + window.location.host.length)
+		var end_url = url.slice(host_index + window.location.host.length)
+		url = start_url + fiddle_domain + end_url
+		oldOpen.apply(this, arguments);
+	} else {
+            oldOpen.apply(this, arguments);
+	}
     }
     else if (url.indexOf('/') == 0) {
-        var fiddle_domain = window.location.pathname.substring(0, getPosition(window.location.pathname, '/', 3))
         url = fiddle_domain + url;
         oldOpen.apply(this, arguments);
     }
