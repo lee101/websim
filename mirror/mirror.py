@@ -277,7 +277,7 @@ class MirrorHandler(BaseHandler):
 
 
         # TODO rewrite data here
-        if content.headers['content-type'].startswith('text/html'):
+        if content.headers.get('content-type', '').startswith('text/html'):
             request_blocked_data = re.sub('(?P<tag><head[\w\W]*?>)', '\g<tag>' + request_blocker(fiddle_name), content.data, 1)
             add_data = re.sub('(?P<tag><body[\w\W]*?>)', '\g<tag>' + add_code, request_blocked_data, 1)
             self.response.out.write(add_data)
