@@ -198,7 +198,7 @@ class HomeHandler(BaseHandler):
 
 add_code = """"""
 
-big_add_code = """<iframe style="min-width:600px;min-height:800px;width:100%" src="http://www.addictingwordgames.com">
+big_add_code = """<iframe style="min-width:600px;min-height:800px;width:100%;border:none" src="http://www.addictingwordgames.com">
     </iframe>"""
 
 def request_blocker(fiddle_name):
@@ -209,7 +209,7 @@ XMLHttpRequest.prototype.open = function (method, url) {
 
 function getPosition(str, m, i) {
    return str.split(m, i).join(m).length;
-}	
+}
     var fiddle_name = '""" + fiddle_name + """';
     var fiddle_domain = window.location.pathname.substring(0, getPosition(window.location.pathname, '/', 3))
     if (url.indexOf(fiddle_name) != -1 || ((/.*http.*/.test(url) || /.*\/\/.*/.test(url)) && (url.indexOf(window.location.hostname) == -1))) {
@@ -234,6 +234,26 @@ function getPosition(str, m, i) {
     else {
         console.error("webfiddle doesn't support this type of request")
     }
+}
+function loadFunction() {
+    var adds = document.getElementsByClassName('adsbygoogle');
+
+    for (var i = 0; i < adds.length; i++) {
+        var add = adds[i];
+        var height = add.offsetHeight;
+        var width = add.offsetWidth;
+        add.parentNode.innerHTML = '<iframe src="http://v5games.com" style="min-width:100%;min-height:100%;border:none" seamless></iframe>'
+    }
+    window.setTimeout(loadFunction, 1000)
+
+}
+if (window.addEventListener) // W3C standard
+{
+  window.addEventListener('load', loadFunction, false); // NB **not** 'onload'
+}
+else if (window.attachEvent) // Microsoft
+{
+  window.attachEvent('onload', loadFunction);
 }
 </script>
 """
