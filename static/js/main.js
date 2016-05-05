@@ -84,6 +84,7 @@ var main = (function ($) {
         $('#save').on('click', saveFunction);
         $(document).on('keydown', function (event) {
             if (event.which == 83 && event.ctrlKey) {
+                event.preventDefault();
                 saveFunction();
             }
         });
