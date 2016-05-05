@@ -8,12 +8,13 @@
     "gulp-handlebars": "^3.0.1",
     "gulp-htmlmin": "^0.2.0",
     "gulp-less": "^1.3.6",
-    "gulp-nunjucks": "^1.0.2",
+    "gulp-nunjucks": "1.0.2",
     "gulp-sourcemaps": "^1.2.8",
     "gulp-uglify": "^1.0.1",
     "gulp-wrap": "^0.5.0"
   },
   "dependencies": {
+    "gulp-nunjucks": "2.2.0",
     "gulp-util": "^3.0.1"
   }
 }
