@@ -1,14 +1,11 @@
 {
   "name": "nunjucks",
-  "version": "1.1.0",
   "main": "browser/nunjucks.min.js",
   "ignore": [
     "Makefile",
     "package.json",
     "tests",
-    "src",
     "docs",
-    "bin",
     "index.js"
   ],
   "keywords": [
@@ -19,14 +16,15 @@
     "browser"
   ],
   "homepage": "https://github.com/mozilla/nunjucks",
-  "_release": "1.1.0",
+  "version": "2.4.2",
+  "_release": "2.4.2",
   "_resolution": {
     "type": "version",
-    "tag": "v1.1.0",
-    "commit": "2b6cea6797272518be659d17a40cc09eaab34824"
+    "tag": "v2.4.2",
+    "commit": "7faaf2c6d23f771bc03bc7b56d3dd0a942ab8643"
   },
-  "_source": "git://github.com/mozilla/nunjucks.git",
-  "_target": "~1.1.0",
+  "_source": "https://github.com/mozilla/nunjucks.git",
+  "_target": "^2.4.2",
   "_originalSource": "nunjucks",
   "_direct": true
 }

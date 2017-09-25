@@ -162,11 +162,6 @@ class TransformTest(unittest.TestCase):
             "https://images.slashdot.org/iestyles.css?T_2_5_0_204",
             "/images.slashdot.org/iestyles.css?T_2_5_0_204")
 
-    def testAddReplace(self):
-        with open('mirror/replaceads.txt') as f:
-            data = f.read()
-            print re.sub(transform_content.GA_REGEX[0], transform_content.GA_REGEX[1], data)
-
 
 ################################################################################
 

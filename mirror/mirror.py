@@ -198,7 +198,7 @@ class HomeHandler(BaseHandler):
 
 add_code = """"""
 
-big_add_code = """<iframe style="min-width:600px;min-height:800px;width:100%" src="http://www.addictingwordgames.com">
+big_add_code = """<iframe style="min-width:600px;min-height:800px;width:100%;border:none" src="http://www.addictingwordgames.com">
     </iframe>"""
 
 def request_blocker(fiddle_name):
@@ -206,12 +206,54 @@ def request_blocker(fiddle_name):
 <script>
 var oldOpen = XMLHttpRequest.prototype.open;
 XMLHttpRequest.prototype.open = function (method, url) {
-    if (/.*""" + fiddle_name + """.*/.test(url) || ((/.*http.*/.test(url) || /.*\/\/.*/.test(url)) && (url.indexOf(window.location.hostname) == -1))) {
+
+function getPosition(str, m, i) {
+   return str.split(m, i).join(m).length;
+}
+    var fiddle_name = '""" + fiddle_name + """';
+    var fiddle_domain = window.location.pathname.substring(0, getPosition(window.location.pathname, '/', 3))
+    if (url.indexOf(fiddle_name) != -1 || ((/.*http.*/.test(url) || /.*\/\/.*/.test(url)) && (url.indexOf(window.location.hostname) == -1))) {
+        oldOpen.apply(this, arguments);
+    }
+    else if (/.*http.*/.test(url) || /.*\/\/.*/.test(url)) {
+	var host_index = url.indexOf(window.location.host);
+        if (host_index != -1) {
+		//on our url needing fiddle name in the url
+		var start_url = url.slice(0, host_index + window.location.host.length)
+		var end_url = url.slice(host_index + window.location.host.length)
+		url = start_url + fiddle_domain + end_url
+		oldOpen.apply(this, arguments);
+	} else {
+            oldOpen.apply(this, arguments);
+	}
+    }
+    else if (url.indexOf('/') == 0) {
+        url = fiddle_domain + url;
         oldOpen.apply(this, arguments);
     }
     else {
         console.error("webfiddle doesn't support this type of request")
     }
+}
+function loadFunction() {
+    var adds = document.getElementsByClassName('adsbygoogle');
+
+    for (var i = 0; i < adds.length; i++) {
+        var add = adds[i];
+        var height = add.offsetHeight;
+        var width = add.offsetWidth;
+        add.parentNode.innerHTML = '<iframe src="http://v5games.com" style="min-width:100%;min-height:100%;border:none" seamless></iframe>'
+    }
+    window.setTimeout(loadFunction, 1000)
+
+}
+if (window.addEventListener) // W3C standard
+{
+  window.addEventListener('load', loadFunction, false); // NB **not** 'onload'
+}
+else if (window.attachEvent) // Microsoft
+{
+  window.attachEvent('onload', loadFunction);
 }
 </script>
 """
@@ -255,7 +297,7 @@ class MirrorHandler(BaseHandler):
 
 
         # TODO rewrite data here
-        if content.headers['content-type'].startswith('text/html'):
+        if content.headers.get('content-type', '').startswith('text/html'):
             request_blocked_data = re.sub('(?P<tag><head[\w\W]*?>)', '\g<tag>' + request_blocker(fiddle_name), content.data, 1)
             add_data = re.sub('(?P<tag><body[\w\W]*?>)', '\g<tag>' + add_code, request_blocked_data, 1)
             self.response.out.write(add_data)
