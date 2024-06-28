@@ -16,6 +16,12 @@ class BaseModel(ndb.Model):
 
 _cache = {}
 
+class CacheKey(BaseModel):
+    id = ndb.StringProperty(required=True)
+    key = ndb.StringProperty(required=True)
+    value = ndb.StringProperty()
+
+
 class Fiddle(BaseModel):
     id = ndb.StringProperty(required=True)
 

@@ -73,7 +73,13 @@ class MirroredContent(object):
 
     @staticmethod
     def get_by_key_name(key_name):
-        return _cache.get(key_name)
+        value = _cache.get(key_name)
+        if not value:
+            value = CacheKey.byKey(key_name).value
+            if value:
+                _cache[key_name] = value
+        return value
+
 
     @staticmethod
     def fetch_and_store(key_name, base_url, translated_address, mirrored_url):
@@ -221,26 +227,6 @@ function getPosition(str, m, i) {
         console.error("webfiddle doesn't support this type of request")
     }
 }
-function loadFunction() {
-    var adds = document.getElementsByClassName('adsbygoogle');
-
-    for (var i = 0; i < adds.length; i++) {
-        var add = adds[i];
-        var height = add.offsetHeight;
-        var width = add.offsetWidth;
-        add.parentNode.innerHTML = '<iframe src="http://v5games.com" style="min-width:100%;min-height:100%;border:none" seamless></iframe>'
-    }
-    window.setTimeout(loadFunction, 1000)
-
-}
-if (window.addEventListener) // W3C standard
-{
-  window.addEventListener('load', loadFunction, false); // NB **not** 'onload'
-}
-else if (window.attachEvent) // Microsoft
-{
-  window.attachEvent('onload', loadFunction);
-}
 </script>
 """
 
@@ -269,14 +255,16 @@ class MirrorHandler(BaseHandler):
 
         content = MirroredContent.get_by_key_name(key_name)
         if content is None:
-            content = MirroredContent.fetch_and_store(key_name, base_url,
-                                                      translated_address,
-                                                      mirrored_url)
+            #generate html by claude
+            content = generate_with_claude(f"""{mirrored_url}
+downloaded html
+<html><body>""")
+            
         if content is None:
             return self.error(404)
 
-        for key, value in content.headers.iteritems():
-            self.response.headers[key] = value
+        # for key, value in content.headers.iteritems():
+        #     self.response.headers[key] = value
         if not DEBUG:
             self.response.headers["cache-control"] = \
                 "max-age=%d" % EXPIRATION_DELTA_SECONDS
@@ -293,27 +281,8 @@ class MirrorHandler(BaseHandler):
             self.response.out.write('<style id="webfiddle-css">' + fiddle.style + '</style>')
 
             self.response.out.write("""
-<script>
-    (function (i, s, o, g, r, a, m) {
-        i['GoogleAnalyticsObject'] = r;
-        i[r] = i[r] || function () {
-            (i[r].q = i[r].q || []).push(arguments)
-        }, i[r].l = 1 * new Date();
-        a = s.createElement(o),
-                m = s.getElementsByTagName(o)[0];
-        a.async = 1;
-        a.src = g;
-        m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-
-    ga('create', 'UA-57646272-1', 'auto');
-    ga('require', 'displayfeatures');
-    ga('send', 'pageview');
-
-</script>
 """
-                                    +
-                                    (big_add_code))
+)
         else:
             self.response.out.write(content.data)
 

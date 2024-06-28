@@ -1,10 +1,10 @@
-[WebFiddle.net](http://webfiddle.net)
+[webSim](https://webSim.netwrck.com)
 ==================
 
-[WebFiddle.net](http://webfiddle.net) a Code editor for changing the web.
-
-WebFiddle works using a proxy server to apply your CSS and JavaScript.
+[webSim](https://webSim.netwrck.com) AI Code editor for building the web.
 
 Built with Python running on the Google App Engine.
 
-Development maintained on [trello](https://trello.com/b/NA2zAjEQ/development)
+Built by leeleepenkman [twitter](https://twitter.com/leeleepenkman)
+
+and [Netwrck.com](https://netwrck.com)
