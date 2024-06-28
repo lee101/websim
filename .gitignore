@@ -1,4 +1,6 @@
 ### Python template
+node_modules
+sellerinfo.py
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

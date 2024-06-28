@@ -7,7 +7,8 @@ import string
 from time import mktime
 import urllib
 from models import BaseModel
-from google.appengine.ext import ndb
+
+from google.cloud import ndb
 
 class GameOnUtils(object):
     debug = os.environ.get('SERVER_SOFTWARE', '').startswith('Development/')

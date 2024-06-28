@@ -1,35 +1,20 @@
-#!/usr/bin/env python
-# Copyright 2008-2014 Brett Slatkin
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 from models import Fiddle
 
-__author__ = "Brett Slatkin (bslatkin@gmail.com)"
 
 import hashlib
 import logging
 import re
 import urllib
 
-from google.appengine.api import memcache
-from google.appengine.api import urlfetch
+# from google.appengine.api import urlfetch
+
 import webapp2
 from google.appengine.ext.webapp import template
 from google.appengine.runtime import apiproxy_errors
 
 import transform_content
 
-
+_cache = {}
 # ##############################################################################
 
 DEBUG = False
@@ -88,7 +73,7 @@ class MirroredContent(object):
 
     @staticmethod
     def get_by_key_name(key_name):
-        return memcache.get(key_name)
+        return _cache.get(key_name)
 
     @staticmethod
     def fetch_and_store(key_name, base_url, translated_address, mirrored_url):
@@ -138,13 +123,14 @@ class MirroredContent(object):
             status=response.status_code,
             headers=adjusted_headers,
             data=content)
-        try:
-            if not memcache.add(key_name, new_content, time=EXPIRATION_DELTA_SECONDS):
-                logging.error('memcache.add failed: key_name = "%s", '
-                              'original_url = "%s"', key_name, mirrored_url)
-        except ValueError:
-            logging.error('memcache.add failed: key_name = "%s", '
-                          'original_url = "%s"', key_name, mirrored_url)
+        _cache[key_name] = new_content
+        # try:
+            # if not memcache.add(key_name, new_content, time=EXPIRATION_DELTA_SECONDS):
+            #     logging.error('memcache.add failed: key_name = "%s", '
+                            #   'original_url = "%s"', key_name, mirrored_url)
+        # except ValueError:
+        #     logging.error('memcache.add failed: key_name = "%s", '
+        #                   'original_url = "%s"', key_name, mirrored_url)
 
         return new_content
 

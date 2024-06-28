@@ -2,7 +2,6 @@
 import json
 import logging
 import os
-from google.appengine.api import memcache
 
 import webapp2
 import jinja2
@@ -39,8 +38,8 @@ class MainHandler(BaseHandler):
     def get(self):
         self.render('templates/index.jinja2', {
             'fiddle': default_fiddle,
-            'title': 'Warp the web with WebFiddle!', #'Hack the web with WebFiddle!',
-            'description': 'Edit CSS and JavaScript of any and every web page! Share the results!'
+            'title': 'WebSim by Netwrck!', 
+            'description': 'AI Creator - Make CSS and JavaScript To Create any and every web page! Share the results!'
         })
 
 
@@ -66,9 +65,9 @@ class CreateFiddleHandler(webapp2.RequestHandler):
         fiddle.style_language = fixtures.STYLE_TYPES[self.request.get('style_language')]
 
         fiddle.put()
-        if not memcache.add(fiddle.id, fiddle, time=3600):
-            logging.error('memcache.add failed: key_name = "%s", '
-                          'original_url = "%s"', fiddle.id, fiddle)
+        # if not memcache.add(fiddle.id, fiddle, time=3600):
+        #     logging.error('memcache.add failed: key_name = "%s", '
+        #                   'original_url = "%s"', fiddle.id, fiddle)
 
         self.response.write('success')
 

@@ -1,8 +1,12 @@
 import logging
 
-from google.appengine.ext import ndb
+from google.cloud import ndb
 
-from google.appengine.api import memcache
+client = ndb.Client()
+
+def ndb_context():
+    return client.context()
+
 
 import fixtures
 
@@ -10,6 +14,7 @@ import fixtures
 class BaseModel(ndb.Model):
     def default(self, o): return o.to_dict()
 
+_cache = {}
 
 class Fiddle(BaseModel):
     id = ndb.StringProperty(required=True)
@@ -30,8 +35,8 @@ class Fiddle(BaseModel):
 
     @classmethod
     def byId(cls, id):
-        return cls.query(cls.id == id).get()
-
+        with ndb_context():
+            return cls.query(cls.id == id).get()
 
     @classmethod
     def byUrlKey(cls, urlkey):
@@ -45,15 +50,19 @@ class Fiddle(BaseModel):
                 return None
             id = urlkey[urlkey_last_dash_pos + 1:]
 
-            fiddle = memcache.get(id)
-            if fiddle:
+            with ndb_context():
+                fiddle = _cache.get(id)
+                if fiddle:
+                    return fiddle
+                fiddle = cls.query(cls.id == id).get()
+                if fiddle:
+                    _cache[id] = fiddle
+                    # if not memcache.add(id, fiddle, time=3600):
+                    #     logging.error('memcache.add failed: key_name = "%s", '
+                    #                   'original_url = "%s"', id, fiddle)
                 return fiddle
-            fiddle = cls.query(cls.id == id).get()
-            if fiddle:
-                if not memcache.add(id, fiddle, time=3600):
-                    logging.error('memcache.add failed: key_name = "%s", '
-                                  'original_url = "%s"', id, fiddle)
-            return fiddle
+
+
 
 
 default_fiddle = Fiddle()
