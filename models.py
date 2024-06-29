@@ -10,6 +10,8 @@ def ndb_context():
 
 import fixtures
 
+default_fiddle = None
+
 
 class BaseModel(ndb.Model):
     def default(self, o): return o.to_dict()
@@ -20,6 +22,16 @@ class CacheKey(BaseModel):
     id = ndb.StringProperty(required=True)
     key = ndb.StringProperty(required=True)
     value = ndb.StringProperty()
+
+    # @classmethod
+    # def byId(cls, id):
+    #     with ndb_context():
+    #         return cls.query(cls.id == id).get()
+    
+    @classmethod
+    def byKey(cls, key):
+        with ndb_context():
+            return cls.query(cls.key == key).get()
 
 
 class Fiddle(BaseModel):
@@ -46,7 +58,7 @@ class Fiddle(BaseModel):
 
     @classmethod
     def byUrlKey(cls, urlkey):
-        if urlkey.endswith('d8c4vu'):
+        if not urlkey or urlkey.endswith('d8c4vu'):
             return default_fiddle
         else:
             #TODO save in memcache by urlkey

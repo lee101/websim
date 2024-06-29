@@ -1,4 +1,5 @@
-from models import Fiddle
+from mirror.ai_wrapper import generate_with_claude
+from models import CacheKey, Fiddle
 
 
 import hashlib
@@ -9,10 +10,21 @@ import urllib
 # from google.appengine.api import urlfetch
 
 import webapp2
-from google.appengine.ext.webapp import template
-from google.appengine.runtime import apiproxy_errors
 
-import transform_content
+
+
+# import transform_content
+
+import os
+import jinja2
+
+config = {}
+config['webapp2_extras.sessions'] = dict(
+    secret_key='93986c9cdd240540f70efaea56a9e3f2')
+
+JINJA_ENVIRONMENT = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
+
 
 _cache = {}
 # ##############################################################################
@@ -55,7 +67,7 @@ MAX_CONTENT_SIZE = 10 ** 64
 
 def get_url_key_name(url):
     url_hash = hashlib.sha256()
-    url_hash.update(url)
+    url_hash.update(url.encode('utf-8'))
     return "hash_" + url_hash.hexdigest()
 
 
@@ -75,9 +87,11 @@ class MirroredContent(object):
     def get_by_key_name(key_name):
         value = _cache.get(key_name)
         if not value:
-            value = CacheKey.byKey(key_name).value
-            if value:
-                _cache[key_name] = value
+            cache_key = CacheKey.byKey(key_name)
+            if cache_key:
+                value = cache_key.value
+                if value:
+                    _cache[key_name] = value
         return value
 
 
@@ -185,7 +199,9 @@ class HomeHandler(BaseHandler):
         context = {
             "secure_url": secure_url,
         }
-        self.response.out.write(template.render("main.html", context))
+        
+        template = JINJA_ENVIRONMENT.get_template("main.html")
+        self.response.write(template.render(context))
 
 
 add_code = """"""
@@ -216,7 +232,7 @@ function getPosition(str, m, i) {
 		url = start_url + fiddle_domain + end_url
 		oldOpen.apply(this, arguments);
 	} else {
-            oldOpen.apply(this, arguments);
+        oldOpen.apply(this, arguments);
 	}
     }
     else if (url.indexOf('/') == 0) {
@@ -229,6 +245,18 @@ function getPosition(str, m, i) {
 }
 </script>
 """
+def find_text_between(content, start_text, end_text):
+    start_index = content.find(start_text)
+    if start_index == -1:
+        return None # this is a bit aggressive?
+    
+    start_index += len(start_text)
+    end_index = content.find(end_text, start_index)
+    
+    if end_index == -1:
+        return None
+    
+    return content[start_index:end_index]
 
 
 class MirrorHandler(BaseHandler):
@@ -249,6 +277,8 @@ class MirrorHandler(BaseHandler):
         translated_address = translated_address[translated_address.index('/') + 1:]
         mirrored_url = HTTP_PREFIX + translated_address
 
+        fiddle = Fiddle.byUrlKey(fiddle_name)
+
         # Use sha256 hash instead of mirrored url for the key name, since key
         # names can only be 500 bytes in length; URLs may be up to 2KB.
         key_name = get_url_key_name(mirrored_url)
@@ -257,8 +287,12 @@ class MirrorHandler(BaseHandler):
         if content is None:
             #generate html by claude
             content = generate_with_claude(f"""{mirrored_url}
-downloaded html
-<html><body>""")
+                                           
+Working on this, please provide the full comprehensive html for everything i should put in the body tag - everything inlined
+Dont describe the html, just give me the full html only
+""")
+            body = find_text_between(content, "<body>", "</body>")
+            content = f"""<html><body>{body}</body></html>"""
             
         if content is None:
             return self.error(404)

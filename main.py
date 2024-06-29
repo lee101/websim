@@ -17,8 +17,7 @@ config['webapp2_extras.sessions'] = dict(secret_key='93986c9cdd240540f70efaea56a
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
-    extensions=['jinja2.ext.autoescape'])
-
+)
 
 class BaseHandler(webapp2.RequestHandler):
     def render(self, view_name, extraParams={}):
@@ -76,6 +75,8 @@ class GetFiddleHandler(BaseHandler):
     def get(self, fiddlekey):
         #TODO something smart with referrer to check if this is a js request we should proxy
         current_fiddle = Fiddle.byUrlKey(fiddlekey)
+        if not current_fiddle:
+            current_fiddle = default_fiddle
         self.render('templates/index.jinja2', {
             'fiddle': current_fiddle,
             'title': current_fiddle.title,
@@ -94,12 +95,40 @@ class SlashMurdererApp(webapp2.RequestHandler):
     def get(self, url):
         self.redirect(url)
 
+class DirectoryHandler(webapp2.RequestHandler):
+    def get(self, path):
+        try:
+            with open(os.path.join('static', path), 'rb') as file:
+                content = file.read()
+                if isinstance(content, bytes):
+                    content = content.decode('utf-8', errors='ignore')
+                self.response.write(content)
+            self.response.headers['Content-Type'] = self.get_content_type(path)
+        except IOError:
+            self.error(404)
+            self.response.write('File not found')
 
+    def get_content_type(self, path):
+        ext = os.path.splitext(path)[1]
+        if ext == '.html':
+            return 'text/html'
+        elif ext == '.css':
+            return 'text/css'
+        elif ext.startswith('.ttf'):
+            return 'font/ttf'
+        elif ext.startswith('.woff'):
+            return 'font/woff'
+        elif ext == '.js':
+            return 'application/javascript'
+        else:
+            return 'application/octet-stream'
+        
 app = webapp2.WSGIApplication([
                                   ('/', MainHandler),
                                   ('/_ah/warmup', WarmupHandler),
                                   ('(.*)/$', SlashMurdererApp),
                                   (r"/createfiddle", CreateFiddleHandler),
+                                  (r"/static/(.+)", DirectoryHandler),
                                   (r"/([^/]*)/([^/]+).*", MirrorHandler),
                                   (r"/(.*)", GetFiddleHandler),
 
