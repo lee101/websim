@@ -100,7 +100,7 @@ class MirroredContent(object):
         _cache[key_name] = content
         
         # Save to datastore
-        cache_key = CacheKey(key=key_name, value=content)
+        cache_key = CacheKey(lookup_key=key_name, value=content)
         CacheKey.save(cache_key)
 
 
@@ -210,13 +210,14 @@ function getPosition(str, m, i) {
 }
 </script>
 """
-def find_text_between(content, start_text, end_text):
+def find_text_between_including(content, start_text, end_text):
     start_index = content.find(start_text)
     if start_index == -1:
         return None # this is a bit aggressive?
     
-    start_index += len(start_text)
+    # start_index += len(start_text)
     end_index = content.find(end_text, start_index)
+    end_index += len(end_text)
     
     if end_index == -1:
         return None
@@ -268,8 +269,9 @@ class MirrorHandler(BaseHandler):
 {fiddle_description}
 Working on this, please provide the full comprehensive html for everything i should put in the body tag - everything using tailwind/inline scripts
 Dont describe the html, just give me the full html only
-""")
-            body = find_text_between(content, "<body", "</body>")
+""", "<body")
+            content = "<body " + content
+            body = find_text_between_including(content, "<body", "</body>")
             if not body:
                 #yolo
                 body = content

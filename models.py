@@ -35,7 +35,7 @@ _cache = {}
 
 class CacheKey(BaseModel):
     # id = ndb.StringProperty(required=True)
-    key = ndb.StringProperty(required=True)
+    lookup_key = ndb.StringProperty(required=True)
     value = ndb.TextProperty()
 
     # @classmethod
@@ -46,7 +46,7 @@ class CacheKey(BaseModel):
     @classmethod
     def byKey(cls, key):
         with ndb_context():
-            return cls.query(cls.key == key).get()
+            return cls.query(cls.lookup_key == key).get()
 
 
 class Fiddle(BaseModel):

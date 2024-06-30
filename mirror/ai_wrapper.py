@@ -3,7 +3,7 @@ from sellerinfo import CLAUDE_API_KEY
 import json
 from loguru import logger
 
-def generate_with_claude(prompt, retries=3):
+def generate_with_claude(prompt, prefill="", retries=3):
     api_key = CLAUDE_API_KEY
     url = "https://api.anthropic.com/v1/messages"
     headers = {
@@ -11,10 +11,13 @@ def generate_with_claude(prompt, retries=3):
         "X-API-Key": api_key,
         "anthropic-version": "2023-06-01",
     }
+    messages = [
+        {"role": "user", "content": prompt}
+    ]
+    if prefill:
+        messages.append({"role": "assistant", "content": prefill})
     data = {
-        "messages": [
-            {"role": "user", "content": prompt}
-        ],
+        "messages": messages,
         "max_tokens": 2024,
         "model": "claude-3-5-sonnet-20240620"
     }
