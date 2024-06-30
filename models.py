@@ -34,7 +34,7 @@ class BaseModel(ndb.Model):
 _cache = {}
 
 class CacheKey(BaseModel):
-    id = ndb.StringProperty(required=True)
+    # id = ndb.StringProperty(required=True)
     key = ndb.StringProperty(required=True)
     value = ndb.TextProperty()
 

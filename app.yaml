@@ -1,6 +1,6 @@
-runtime: python27
-api_version: 1
-threadsafe: yes
+runtime: python311
+entrypoint: GOOGLE_APPLICATION_CREDENTIALS=secrets/google-credentials.json NLTK_DATA=gaedata gunicorn -k gthread -b :$PORT main:app --timeout 120 --workers 1 --threads 1 
+default_expiration: "300d 5h"
 
 handlers:
 
@@ -31,12 +31,6 @@ handlers:
 - url: .*
   script: main.app
 
-libraries:
-- name: webapp2
-  version: "2.5.2"
-- name: jinja2
-  version: "2.6"
-
 instance_class: F1
 automatic_scaling:
   max_idle_instances: 1
@@ -53,10 +47,4 @@ automatic_scaling:
 inbound_services:
 - warmup
 
-skip_files:
-- ^(.*/)?#.*#$
-- ^(.*/)?.*~$
-- ^(.*/)?.*\.py[co]$
-- ^(.*/)?.*/RCS/.*$
-- ^(.*/)?\..*$
-- ^node_modules.*$
+

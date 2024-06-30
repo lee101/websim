@@ -2,8 +2,19 @@
 <head>
     <title>{{ title }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description"
+          content="{{ description }}">
 
-    <meta name="description" content="{{ description }}">
+    <meta name="keywords"
+          content="ai simulator, javascript, css, html, editor, websim, simulator">
+    <meta property="og:title" content="{{ title }}">
+    <meta property="og:url" content="{{ url }}">
+    <meta property="og:image"
+          content="{{ static_url }}/images/websim-logo256.webp">
+    <meta property="og:image:width" content="256"/>
+    <meta property="og:image:height" content="256"/>
+
+    
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
 
     <style id="webfiddle-css">{{ fiddle.style }}</style>
