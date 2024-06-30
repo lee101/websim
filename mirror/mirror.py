@@ -1,29 +1,21 @@
-from mirror.ai_wrapper import generate_with_claude
-from models import CacheKey, Fiddle
-
-
 import hashlib
 import logging
-import re
+import os
 import urllib
+from pathlib import Path
 
-# from google.appengine.api import urlfetch
-
+import jinja2
 import webapp2
 
-
-
-# import transform_content
-
-import os
-import jinja2
+from mirror.ai_wrapper import generate_with_claude
+from models import CacheKey, Fiddle
 
 config = {}
 config['webapp2_extras.sessions'] = dict(
     secret_key='93986c9cdd240540f70efaea56a9e3f2')
 
 JINJA_ENVIRONMENT = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
+    loader=jinja2.FileSystemLoader(os.path.dirname(os.path.dirname(__file__))))
 
 
 _cache = {}
@@ -93,66 +85,24 @@ class MirroredContent(object):
                 if value:
                     _cache[key_name] = value
         return value
-
-
+    
     @staticmethod
-    def fetch_and_store(key_name, base_url, translated_address, mirrored_url):
-        """Fetch and cache a page.
-
-        Args:
-          key_name: Hash to use to store the cached page.
-          base_url: The hostname of the page that's being mirrored.
-          translated_address: The URL of the mirrored page on this site.
-          mirrored_url: The URL of the original page. Hostname should match
-            the base_url.
-
-        Returns:
-          A new MirroredContent object, if the page was successfully retrieved.
-          None if any errors occurred or the content could not be retrieved.
+    def save(key_name: str, content: str):
         """
-        try:
-            response = urlfetch.fetch(mirrored_url)
-        except (urlfetch.Error, apiproxy_errors.Error):
-            logging.exception("Could not fetch URL")
-            return None
+        Save the object to the cache and datastore.
+        
+        Args:
+            key_name (str): The key name to use for storing the content.
+            content (str): The str object to save.
+        """
+        
+        # Save to memcache
+        _cache[key_name] = content
+        
+        # Save to datastore
+        cache_key = CacheKey(key=key_name, value=content)
+        CacheKey.save(cache_key)
 
-        adjusted_headers = {}
-        for key, value in response.headers.iteritems():
-            adjusted_key = key.lower()
-            if adjusted_key not in IGNORE_HEADERS:
-                adjusted_headers[adjusted_key] = value
-
-        content = response.content
-        page_content_type = adjusted_headers.get("content-type", "")
-        for content_type in TRANSFORMED_CONTENT_TYPES:
-            # startswith() because there could be a 'charset=UTF-8' in the header.
-            if page_content_type.startswith(content_type):
-                content = transform_content.TransformContent(base_url, mirrored_url,
-                                                             content)
-                break
-
-        # If the transformed content is over MAX_CONTENT_SIZE, truncate it (yikes!)
-        if len(content) > MAX_CONTENT_SIZE:
-            logging.warning("Content is over MAX_CONTENT_SIZE; truncating")
-            content = content[:MAX_CONTENT_SIZE]
-
-        new_content = MirroredContent(
-            base_url=base_url,
-            original_address=mirrored_url,
-            translated_address=translated_address,
-            status=response.status_code,
-            headers=adjusted_headers,
-            data=content)
-        _cache[key_name] = new_content
-        # try:
-            # if not memcache.add(key_name, new_content, time=EXPIRATION_DELTA_SECONDS):
-            #     logging.error('memcache.add failed: key_name = "%s", '
-                            #   'original_url = "%s"', key_name, mirrored_url)
-        # except ValueError:
-        #     logging.error('memcache.add failed: key_name = "%s", '
-        #                   'original_url = "%s"', key_name, mirrored_url)
-
-        return new_content
 
 
 ###############################################################################
@@ -175,6 +125,21 @@ class BaseHandler(webapp2.RequestHandler):
             self.error(404)
             return True
         return False
+    
+    
+    def render(self, view_name, extraParams={}):
+        template_values = {
+            # 'json': json,
+            # 'fixtures': fixtures,
+            # 'GameOnUtils': GameOnUtils,
+            'url': self.request.url,
+        }
+        template_values.update(extraParams)
+
+        template = JINJA_ENVIRONMENT.get_template(view_name)
+        self.response.write(template.render(template_values))
+    
+
 
 
 class HomeHandler(BaseHandler):
@@ -278,25 +243,42 @@ class MirrorHandler(BaseHandler):
         mirrored_url = HTTP_PREFIX + translated_address
 
         fiddle = Fiddle.byUrlKey(fiddle_name)
+        # fiddle_body = fiddle.body
+        fiddle_description = ''
+        fiddle_title = ''
+        if fiddle:
+            fiddle_title = fiddle.title
+            fiddle_description = fiddle.description
+
+        # fiddle_style = fiddle.style # todo should we regen based on js/css? - 
+        # fiddle_script = fiddle.script
+        # todo routes for regen css/js
+
 
         # Use sha256 hash instead of mirrored url for the key name, since key
         # names can only be 500 bytes in length; URLs may be up to 2KB.
         key_name = get_url_key_name(mirrored_url)
 
         content = MirroredContent.get_by_key_name(key_name)
+        body = content
         if content is None:
             #generate html by claude
             content = generate_with_claude(f"""{mirrored_url}
-                                           
-Working on this, please provide the full comprehensive html for everything i should put in the body tag - everything inlined
+{fiddle_title}
+{fiddle_description}
+Working on this, please provide the full comprehensive html for everything i should put in the body tag - everything using tailwind/inline scripts
 Dont describe the html, just give me the full html only
 """)
-            body = find_text_between(content, "<body>", "</body>")
-            content = f"""<html><body>{body}</body></html>"""
-            
-        if content is None:
+            body = find_text_between(content, "<body", "</body>")
+            if not body:
+                #yolo
+                body = content
+            # content = f"""<html><body>{body}</body></html>"""
+        
+        if body is None:
             return self.error(404)
-
+        if body:
+            MirroredContent.save(key_name, body)
         # for key, value in content.headers.iteritems():
         #     self.response.headers[key] = value
         if not DEBUG:
@@ -305,20 +287,16 @@ Dont describe the html, just give me the full html only
 
 
         # TODO rewrite data here
-        if content.headers.get('content-type', '').startswith('text/html'):
-            request_blocked_data = re.sub('(?P<tag><head[\w\W]*?>)', '\g<tag>' + request_blocker(fiddle_name), content.data, 1)
-            add_data = re.sub('(?P<tag><body[\w\W]*?>)', '\g<tag>' + add_code, request_blocked_data, 1)
-            self.response.out.write(add_data)
-
-            fiddle = Fiddle.byUrlKey(fiddle_name)
-            self.response.out.write('<script id="webfiddle-js">' + fiddle.script + '</script>')
-            self.response.out.write('<style id="webfiddle-css">' + fiddle.style + '</style>')
-
-            self.response.out.write("""
-"""
-)
-        else:
-            self.response.out.write(content.data)
+        
+        # full_content = f"""<html><head>{fiddle.title}</head><body>{body}</body></html>"""
+        self.render('templates/genpage.jinja2', {
+            'fiddle': fiddle,
+            'title': fiddle.title,
+            'description': fiddle.description,
+            'body': body,
+            'request_blocker': request_blocker(fiddle_name),
+            'add_code': add_code,
+        })
 
 ###############################################################################
 

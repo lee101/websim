@@ -16,12 +16,27 @@ default_fiddle = None
 class BaseModel(ndb.Model):
     def default(self, o): return o.to_dict()
 
+    @classmethod
+    def save(cls, obj):
+        with client.context():
+            return obj.put()
+
+    @classmethod
+    def delete(cls, obj):
+        with client.context():
+            return obj.key.delete()
+
+    @classmethod
+    def save_bulk(cls, objs):
+        with client.context():
+            return ndb.put_multi(objs)
+
 _cache = {}
 
 class CacheKey(BaseModel):
     id = ndb.StringProperty(required=True)
     key = ndb.StringProperty(required=True)
-    value = ndb.StringProperty()
+    value = ndb.TextProperty()
 
     # @classmethod
     # def byId(cls, id):
@@ -37,8 +52,8 @@ class CacheKey(BaseModel):
 class Fiddle(BaseModel):
     id = ndb.StringProperty(required=True)
 
-    script = ndb.StringProperty()
-    style = ndb.StringProperty()
+    script = ndb.TextProperty()
+    style = ndb.TextProperty()
 
     script_language = ndb.IntegerProperty()
     style_language = ndb.IntegerProperty()
@@ -47,7 +62,7 @@ class Fiddle(BaseModel):
     updated = ndb.DateTimeProperty(auto_now=True)
 
     title = ndb.StringProperty()
-    description = ndb.StringProperty()
+    description = ndb.TextProperty()
 
     start_url = ndb.StringProperty()
 

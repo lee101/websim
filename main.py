@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import json
-import logging
 import os
+from pathlib import Path
 
 import webapp2
 import jinja2
@@ -19,12 +19,28 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
 )
 
+current_dir = Path(__file__).parent
+debug = (
+    os.environ.get("SERVER_SOFTWARE", "").startswith("Development")
+    or os.environ.get("IS_DEVELOP", "") == 1
+    or Path(current_dir / "models/debug.env").exists()
+)
+if debug:
+    # stripe_keys = {
+    #     "secret_key": sellerinfo.STRIPE_TEST_SECRET,
+    #     "publishable_key": sellerinfo.STRIPE_TEST_KEY,
+    # }
+    GCLOUD_STATIC_BUCKET_URL = "/static"
+else:
+    GCLOUD_STATIC_BUCKET_URL = "https://static.netwrck.com/simstatic"
+
 class BaseHandler(webapp2.RequestHandler):
     def render(self, view_name, extraParams={}):
         template_values = {
             'json': json,
             'fixtures': fixtures,
             'GameOnUtils': GameOnUtils,
+            'static_url': GCLOUD_STATIC_BUCKET_URL,
             'url': self.request.url,
         }
         template_values.update(extraParams)
@@ -62,8 +78,7 @@ class CreateFiddleHandler(webapp2.RequestHandler):
 
         fiddle.script_language = fixtures.SCRIPT_TYPES[self.request.get('script_language')]
         fiddle.style_language = fixtures.STYLE_TYPES[self.request.get('style_language')]
-
-        fiddle.put()
+        Fiddle.save(fiddle)
         # if not memcache.add(fiddle.id, fiddle, time=3600):
         #     logging.error('memcache.add failed: key_name = "%s", '
         #                   'original_url = "%s"', fiddle.id, fiddle)

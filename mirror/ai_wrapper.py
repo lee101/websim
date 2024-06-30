@@ -23,7 +23,9 @@ def generate_with_claude(prompt, retries=3):
         try:
             response = requests.post(url, headers=headers, json=data)
             response.raise_for_status()  # Raises an HTTPError for bad responses
-            return response.json()["content"][0]["text"]
+            generated_text = response.json()["content"][0]["text"]
+            logger.info(f"Claude Generated text: {generated_text}")
+            return generated_text
         except Exception as e:
             logger.error(f"Error calling Claude API (attempt {attempt + 1}/{retries}): {str(e)}")
             if attempt == retries - 1:
