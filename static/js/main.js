@@ -152,6 +152,17 @@ var main = (function ($) {
                 webFrame.setCSS(editor.getValue());
             }
         })
+        
+        // Also handle keydown for non-printable keys
+        editor.on('change', function (codeMirror, event) {
+            // Show hint on every keydown
+            // editor.showHint({completeSingle: false});
+
+            // INJECT INTO IFRAME
+            if (type == 'css') {
+                webFrame.setCSS(editor.getValue());
+            }
+        });
     };
 
 
