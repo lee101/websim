@@ -2,7 +2,7 @@
 node_modules
 sellerinfo.py
 secrets
-
+models
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
