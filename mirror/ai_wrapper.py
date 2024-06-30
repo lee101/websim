@@ -1,6 +1,5 @@
 import requests
 from sellerinfo import CLAUDE_API_KEY
-import json
 from loguru import logger
 
 def generate_with_claude(prompt, prefill="", retries=3):
@@ -14,6 +13,8 @@ def generate_with_claude(prompt, prefill="", retries=3):
     messages = [
         {"role": "user", "content": prompt}
     ]
+    
+    logger.info(f"Claude in: {prompt}")
     if prefill:
         messages.append({"role": "assistant", "content": prefill})
     data = {

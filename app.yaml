@@ -16,8 +16,8 @@ handlers:
   expiration: "0d 1h"
 
 - url: /apple-touch-icon.png
-  static_files: static/images/apple-touch-icon.png
-  upload: static/images/apple-touch-icon.png
+  static_files: static/img/apple-touch-icon.png
+  upload: static/img/apple-touch-icon.png
 
 - url: /BingSiteAuth.xml
   static_files: static/BingSiteAuth.xml

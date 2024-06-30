@@ -5,6 +5,7 @@ import urllib
 from pathlib import Path
 
 import jinja2
+from loguru import logger
 import webapp2
 
 from mirror.ai_wrapper import generate_with_claude
@@ -233,7 +234,7 @@ class MirrorHandler(BaseHandler):
             return self.error(500)
 
 
-        assert base_url
+        logger.info(f"base_url: {base_url}")
 
         base_url = fiddle_name + '/' + base_url
 
