@@ -99,7 +99,7 @@ class Fiddle(BaseModel):
 
 
 default_fiddle = Fiddle()
-default_fiddle.id = 'd8c4vu'
+default_fiddle.id = '69ulpk'
 default_fiddle.style = 'body {\n' \
                        '    background-color: skyblue;\n' \
                        '}\n'
@@ -114,4 +114,4 @@ default_fiddle.style_language = fixtures.STYLE_TYPES['css']
 default_fiddle.script_language = fixtures.SCRIPT_TYPES['js']
 default_fiddle.title = 'cats'
 default_fiddle.description = 'cats via the cat api'
-default_fiddle.start_url = 'www.google.com'
+default_fiddle.start_url = 'cats.com'

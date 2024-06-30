@@ -67,6 +67,15 @@ Ext.onReady(function () {
 //                        vtype: 'url',
                         width: '100%',
                         emptyText: 'starting url'
+                    },
+                    {
+                        xtype: 'panel',
+                        html: '<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8598649123553748" ' +
+                              'data-ad-slot="7003733604" data-ad-format="auto" data-full-width-responsive="true"></ins>' +
+                              '<script>' +
+                              '(adsbygoogle = window.adsbygoogle || []).push({});' +
+                              '</script>',
+                        width: '100%'
                     }
                 ],
                 tools: [
@@ -105,7 +114,7 @@ Ext.onReady(function () {
                         anchor: '95%',
                         width: '100%',
 //                        vtype: 'url',
-                        emptyText: 'http://www.google.com'
+                        emptyText: 'http://cats.com'
                     }
                 ],
 //                title: '<input type="text" placeholder="www.google.com/*" /> ',
