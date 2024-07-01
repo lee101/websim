@@ -17,6 +17,7 @@ Ext.onReady(function () {
     window.viewport = Ext.create('Ext.panel.Panel', {
         renderTo: Ext.Element.get('main-content'),
         height: '100%',
+        minHeight: 700,
         width: '100%',
         layout: {
             type: 'border',
@@ -34,7 +35,8 @@ Ext.onReady(function () {
                 split: true,
                 width: '20%',
                 minWidth: 100,
-                minHeight: 140,
+                minHeight: 700,
+                height: '100%',
                 bodyPadding: 10,
                 stateId: 'westRegion',
                 stateful: true,
@@ -70,12 +72,11 @@ Ext.onReady(function () {
                     },
                     {
                         xtype: 'panel',
-                        html: '<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8598649123553748" ' +
-                              'data-ad-slot="7003733604" data-ad-format="auto" data-full-width-responsive="true"></ins>' +
-                              '<script>' +
-                              '(adsbygoogle = window.adsbygoogle || []).push({});' +
-                              '</script>',
-                        width: '100%'
+                        html: '<div id="fullscreen-content" style="width: 100%; height: 100%; min-height: 700px;"></div>',
+                        width: '100%',
+                        height: '100%',
+                        minHeight: 700,
+                        layout: 'fit'
                     }
                 ],
                 tools: [
@@ -123,6 +124,23 @@ Ext.onReady(function () {
         ]
     });
     main.setup();
+
+    window.setTimeout(function () {
+        var adcode = '<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8598649123553748" ' +
+                              'data-ad-slot="7003733604" data-ad-format="auto" data-full-width-responsive="true"></ins>' +
+                              '<script>' +
+                              '(adsbygoogle = window.adsbygoogle || []).push({});' +
+                              '</script>'
+
+        // fullscreen-content
+        var fullscreenContent = document.getElementById('fullscreen-content');
+        if (fullscreenContent) {
+            fullscreenContent.innerHTML = adcode;
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        } else {
+            console.warn('Element with id "fullscreen-content" not found');
+        }
+    }, 3000);
 //    var viewportContainer = Ext.create('Ext.panel.Panel', {
 //        layout: 'fit',
 //        renderTo: Ext.Element.get('main-content'),
