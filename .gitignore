@@ -1,4 +1,6 @@
 ### Python template
+node_modules/gulp
+node_modules/gulp-less
 node_modules
 sellerinfo.py
 secrets

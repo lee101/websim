@@ -20,7 +20,7 @@ def generate_with_claude(prompt, prefill="", retries=3):
     data = {
         "messages": messages,
         "max_tokens": 2024,
-        "model": "claude-3-5-sonnet-20240620"
+        "model": "claude-3-5-sonnet-20241022"
     }
     
     for attempt in range(retries):
