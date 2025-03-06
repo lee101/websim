@@ -3,149 +3,132 @@ import json
 import os
 from pathlib import Path
 
-import webapp2
-import jinja2
+from fastapi import FastAPI, Request, Response
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+# from fastapi.middleware.sessions import SessionMiddleware
 
 import fixtures
 from gameon_utils import GameOnUtils
-from mirror.mirror import MirrorHandler
+from mirror.mirror import mirror_router
 from models import Fiddle, default_fiddle
 
+app = FastAPI()
 
-config = {}
-config['webapp2_extras.sessions'] = dict(secret_key='93986c9cdd240540f70efaea56a9e3f2')
+# # Use SessionMiddleware instead of secret_key
+# app.add_middleware(
+#     SessionMiddleware,
+#     secret_key='93986c9cdd240540f70efaea56a9e3f2'
+# )
 
-JINJA_ENVIRONMENT = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
-)
+templates = Jinja2Templates(directory=".")
 
 current_dir = Path(__file__).parent
 debug = (
     os.environ.get("SERVER_SOFTWARE", "").startswith("Development")
-    or os.environ.get("IS_DEVELOP", "") == 1
+    or os.environ.get("IS_DEVELOP", "") == "1"
     or Path(current_dir / "models/debug.env").exists()
 )
-if debug:
-    # stripe_keys = {
-    #     "secret_key": sellerinfo.STRIPE_TEST_SECRET,
-    #     "publishable_key": sellerinfo.STRIPE_TEST_KEY,
-    # }
-    GCLOUD_STATIC_BUCKET_URL = "/static"
-else:
-    GCLOUD_STATIC_BUCKET_URL = "https://static.netwrck.com/simstatic"
 
-class BaseHandler(webapp2.RequestHandler):
-    def render(self, view_name, extraParams={}):
-        template_values = {
-            'json': json,
-            'fixtures': fixtures,
-            'GameOnUtils': GameOnUtils,
-            'static_url': GCLOUD_STATIC_BUCKET_URL,
-            'url': self.request.url,
-        }
-        template_values.update(extraParams)
+GCLOUD_STATIC_BUCKET_URL = "/static" if debug else "https://static.netwrck.com/simstatic"
 
-        template = JINJA_ENVIRONMENT.get_template(view_name)
-        self.response.write(template.render(template_values))
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
+@app.get("/", response_class=HTMLResponse)
+async def main_handler(request: Request):
+    # Convert default_fiddle to a dict for JSON serialization
+    current_saved_fiddle = {
+        "id": default_fiddle.id,
+        "title": default_fiddle.title,
+        "description": default_fiddle.description,
+        "start_url": default_fiddle.start_url,
+        "script": default_fiddle.script,
+        "style": default_fiddle.style,
+        "script_language": default_fiddle.script_language,
+        "style_language": default_fiddle.style_language
+    }
+    
+    return templates.TemplateResponse("templates/index.jinja2", {
+        "request": request,
+        "fiddle": default_fiddle,
+        "current_saved_fiddle": json.dumps(current_saved_fiddle),  # Add this line
+        "title": "WebSim by Netwrck!",
+        "description": "AI Creator - Make CSS and JavaScript To Create any and every web page! Share the results!",
+        "json": json,
+        "fixtures": fixtures,
+        "GameOnUtils": GameOnUtils,
+        "static_url": GCLOUD_STATIC_BUCKET_URL,
+        "url": request.url,
+    })
 
-class MainHandler(BaseHandler):
-    def get(self):
-        self.render('templates/index.jinja2', {
-            'fiddle': default_fiddle,
-            'title': 'WebSim by Netwrck!', 
-            'description': 'AI Creator - Make CSS and JavaScript To Create any and every web page! Share the results!'
-        })
+@app.get("/_ah/warmup")
+async def warmup_handler():
+    return ""
 
+@app.get("/createfiddle")
+async def create_fiddle_handler(request: Request):
+    fiddle = Fiddle()
+    fiddle.id = request.query_params.get('id')
+    fiddle.title = request.query_params.get('title')
+    fiddle.description = request.query_params.get('description')
+    fiddle.start_url = request.query_params.get('start_url')
+    fiddle.script = request.query_params.get('script')
+    fiddle.style = request.query_params.get('style')
+    
+    # Fix type issues with None values
+    script_language = request.query_params.get('script_language')
+    style_language = request.query_params.get('style_language')
+    
+    fiddle.script_language = fixtures.SCRIPT_TYPES[script_language] if script_language else fixtures.SCRIPT_TYPES['javascript']
+    fiddle.style_language = fixtures.STYLE_TYPES[style_language] if style_language else fixtures.STYLE_TYPES['css']
+    
+    Fiddle.save(fiddle)
+    return "success"
 
-class WarmupHandler(BaseHandler):
-    def get(self):
-        pass
-
-
-class CreateFiddleHandler(webapp2.RequestHandler):
-    def get(self):
-        fiddle = Fiddle()
-
-        fiddle.id = self.request.get('id')
-
-        fiddle.title = self.request.get('title')
-        fiddle.description = self.request.get('description')
-        fiddle.start_url = self.request.get('start_url')
-
-        fiddle.script = self.request.get('script')
-        fiddle.style = self.request.get('style')
-
-        fiddle.script_language = fixtures.SCRIPT_TYPES[self.request.get('script_language')]
-        fiddle.style_language = fixtures.STYLE_TYPES[self.request.get('style_language')]
-        Fiddle.save(fiddle)
-        # if not memcache.add(fiddle.id, fiddle, time=3600):
-        #     logging.error('memcache.add failed: key_name = "%s", '
-        #                   'original_url = "%s"', fiddle.id, fiddle)
-
-        self.response.write('success')
-
-
-class GetFiddleHandler(BaseHandler):
-    def get(self, fiddlekey):
-        #TODO something smart with referrer to check if this is a js request we should proxy
-        current_fiddle = Fiddle.byUrlKey(fiddlekey)
-        if not current_fiddle:
-            current_fiddle = default_fiddle
-        self.render('templates/index.jinja2', {
-            'fiddle': current_fiddle,
-            'title': current_fiddle.title,
-            'description': current_fiddle.description
-        })
-
-
-class SitemapHandler(webapp2.RequestHandler):
-    def get(self):
-        self.response.headers['Content-Type'] = 'text/xml'
-        template = JINJA_ENVIRONMENT.get_template('sitemap.xml')
-        self.response.write(template.render(template))
-
-
-class SlashMurdererApp(webapp2.RequestHandler):
-    def get(self, url):
-        self.redirect(url)
-
-class DirectoryHandler(webapp2.RequestHandler):
-    def get(self, path):
-        try:
-            with open(os.path.join('static', path), 'rb') as file:
-                content = file.read()
-                if isinstance(content, bytes):
-                    content = content.decode('utf-8', errors='ignore')
-                self.response.write(content)
-            self.response.headers['Content-Type'] = self.get_content_type(path)
-        except IOError:
-            self.error(404)
-            self.response.write('File not found')
-
-    def get_content_type(self, path):
-        ext = os.path.splitext(path)[1]
-        if ext == '.html':
-            return 'text/html'
-        elif ext == '.css':
-            return 'text/css'
-        elif ext.startswith('.ttf'):
-            return 'font/ttf'
-        elif ext.startswith('.woff'):
-            return 'font/woff'
-        elif ext == '.js':
-            return 'application/javascript'
-        else:
-            return 'application/octet-stream'
+@app.get("/{fiddlekey}", response_class=HTMLResponse)
+async def get_fiddle_handler(request: Request, fiddlekey: str):
+    current_fiddle = Fiddle.byUrlKey(fiddlekey)
+    if not current_fiddle:
+        current_fiddle = default_fiddle
         
-app = webapp2.WSGIApplication([
-                                  ('/', MainHandler),
-                                  ('/_ah/warmup', WarmupHandler),
-                                  ('(.*)/$', SlashMurdererApp),
-                                  (r"/createfiddle", CreateFiddleHandler),
-                                  (r"/static/(.+)", DirectoryHandler),
-                                  (r"/([^/]*)/([^/]+).*", MirrorHandler),
-                                  (r"/(.*)", GetFiddleHandler),
+    # Convert fiddle to a dict for JSON serialization
+    current_saved_fiddle = {
+        "id": current_fiddle.id,
+        "title": current_fiddle.title,
+        "description": current_fiddle.description,
+        "start_url": current_fiddle.start_url,
+        "script": current_fiddle.script,
+        "style": current_fiddle.style,
+        "script_language": current_fiddle.script_language,
+        "style_language": current_fiddle.style_language
+    }
+    
+    return templates.TemplateResponse("templates/index.jinja2", {
+        "request": request,
+        "fiddle": current_fiddle,
+        "current_saved_fiddle": json.dumps(current_saved_fiddle),  # Add this line
+        "title": current_fiddle.title,
+        "description": current_fiddle.description,
+        "json": json,
+        "fixtures": fixtures,
+        "GameOnUtils": GameOnUtils,
+        "static_url": GCLOUD_STATIC_BUCKET_URL,
+        "url": request.url,
+    })
 
+@app.get("/sitemap.xml", response_class=HTMLResponse)
+async def sitemap_handler(request: Request):
+    content = templates.get_template("sitemap.xml").render({"request": request})
+    return Response(content=content, media_type="text/xml")
 
-                              ], debug=True)
+@app.get("/{url:path}/")
+async def slash_murderer(url: str):
+    return RedirectResponse(url=f"/{url}")
+
+# Include the mirror router
+app.include_router(mirror_router)
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
