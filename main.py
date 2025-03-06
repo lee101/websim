@@ -52,7 +52,7 @@ async def main_handler(request: Request):
     return templates.TemplateResponse("templates/index.jinja2", {
         "request": request,
         "fiddle": default_fiddle,
-        "current_saved_fiddle": json.dumps(current_saved_fiddle),  # Add this line
+        "current_saved_fiddle": current_saved_fiddle,
         "title": "WebSim by Netwrck!",
         "description": "AI Creator - Make CSS and JavaScript To Create any and every web page! Share the results!",
         "json": json,
@@ -107,7 +107,7 @@ async def get_fiddle_handler(request: Request, fiddlekey: str):
     return templates.TemplateResponse("templates/index.jinja2", {
         "request": request,
         "fiddle": current_fiddle,
-        "current_saved_fiddle": json.dumps(current_saved_fiddle),  # Add this line
+        "current_saved_fiddle": current_saved_fiddle,
         "title": current_fiddle.title,
         "description": current_fiddle.description,
         "json": json,

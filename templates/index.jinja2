@@ -3,11 +3,11 @@
 
 {% block jsheaders %}
     <script>
-        window.currentSavedFiddle = {{ json.dumps(fiddle, cls=GameOnUtils.MyEncoder) }};
+        window.currentSavedFiddle = {{ current_saved_fiddle|tojson }};
         window.fixtures = (function () {
             var self = {};
-            self.SCRIPT_TYPES = {{ json.dumps(fixtures.SCRIPT_TYPES, cls=GameOnUtils.MyEncoder) }};
-            self.STYLE_TYPES = {{ json.dumps(fixtures.STYLE_TYPES, cls=GameOnUtils.MyEncoder) }};
+            self.SCRIPT_TYPES = {{ fixtures.SCRIPT_TYPES|tojson }};
+            self.STYLE_TYPES = {{ fixtures.STYLE_TYPES|tojson }};
             return self;
         })();
     </script>

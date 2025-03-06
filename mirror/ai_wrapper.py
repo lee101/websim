@@ -13,16 +13,16 @@ def generate_with_claude(prompt, prefill="", retries=3):
     messages = [
         {"role": "user", "content": prompt}
     ]
-    
+
     logger.info(f"Claude in: {prompt}")
     if prefill:
         messages.append({"role": "assistant", "content": prefill})
     data = {
         "messages": messages,
-        "max_tokens": 2024,
-        "model": "claude-3-5-sonnet-20241022"
+        "max_tokens": 6024,
+        "model": "claude-3-7-sonnet-20250219"
     }
-    
+
     for attempt in range(retries):
         try:
             response = requests.post(url, headers=headers, json=data)
