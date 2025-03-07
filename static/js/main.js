@@ -10,8 +10,9 @@ var main = (function ($) {
         lineNumbers: true,
         lineWrapping: true,
         extraKeys: {"Ctrl-Space": "autocomplete"},
-//        completeSingle: false,
-        tabMode: 'spaces' // or 'shift'
+        theme: "monokai",
+        tabMode: 'spaces', // or 'shift'
+        viewportMargin: Infinity
     };
 
     // Add fallback for currentSavedFiddle
@@ -28,14 +29,46 @@ var main = (function ($) {
         };
     }
 
+    // Ensure script and style are strings
+    if (currentSavedFiddle && currentSavedFiddle.script === null) {
+        currentSavedFiddle.script = '';
+    }
+    if (currentSavedFiddle && currentSavedFiddle.style === null) {
+        currentSavedFiddle.style = '';
+    }
+
     self.setup = function () {
+        // Define DOM-specific hint options
+        CodeMirror.registerHelper("hint", "javascript", function(cm) {
+            var inner = {
+                // Use our custom DOM hints along with standard JS hints
+                js: CodeMirror.hint.javascript,
+                dom: CodeMirror.hint.dom
+            };
+            
+            return CodeMirror.resolveMode(inner);
+        });
+
         window.jsEditor = CodeMirror($('#js-editor')[0], $.extend({
-            mode: {name: "javascript", globalVars: true}
+            mode: {name: "javascript", globalVars: true},
+            extraKeys: {
+                "Ctrl-Space": "autocomplete",
+                "Alt-.": function(cm) { 
+                    cm.showHint({hint: CodeMirror.hint.dom, completeSingle: false});
+                }
+            },
+            hintOptions: {
+                completeSingle: false,
+                alignWithWord: true,
+                closeOnUnfocus: false
+            }
         }, defaultCodeMirrorOptions));
 
         window.cssEditor = CodeMirror($('#css-editor')[0], $.extend({
-            mode: "css"
-
+            mode: "css",
+            extraKeys: {
+                "Ctrl-Space": "autocomplete"
+            }
         }, defaultCodeMirrorOptions));
 
         Inlet(jsEditor);
@@ -154,27 +187,72 @@ var main = (function ($) {
             else {
                 times = 0;
             }
-            var hashKey = (event.which == 35 && event.shiftKey);
+            
+            // Show hints after dots (for property access) or periods
             var dotKey = event.which == 46;
-            var show = hashKey || dotKey;
-            //51 shift  190
-            if (times >= 1 || show) {
-                editor.showHint({completeSingle: false});
+            // Show hints after typing 'document.' or similar
+            var cursor = editor.getCursor();
+            var token = editor.getTokenAt(cursor);
+            var line = editor.getLine(cursor.line);
+            
+            var showHint = false;
+            
+            // After a dot, always show hints
+            if (dotKey) {
+                showHint = true;
             }
-            //INJECT INTO IFRAME
-            if (type == 'css') {
-                webFrame.setCSS(editor.getValue());
+            // After typing a few letters, show hints
+            else if (times >= 2) {
+                showHint = true;
             }
-        })
-        
-        // Also handle keydown for non-printable keys
-        editor.on('change', function (codeMirror, event) {
-            // Show hint on every keydown
-            // editor.showHint({completeSingle: false});
-
+            // After typing 'document', 'window', 'element', etc. followed by a dot
+            else if (token && token.type === "variable" && 
+                    (token.string === "document" || 
+                     token.string === "window" || 
+                     /Element/.test(token.string))) {
+                showHint = true;
+            }
+            
+            if (showHint) {
+                var hintOptions = {
+                    completeSingle: false,
+                    alignWithWord: true,
+                    closeOnUnfocus: false
+                };
+                
+                // For JavaScript, use our custom DOM hints
+                if (type === 'js' && dotKey) {
+                    hintOptions.hint = CodeMirror.hint.dom;
+                }
+                
+                editor.showHint(hintOptions);
+            }
+            
             // INJECT INTO IFRAME
             if (type == 'css') {
                 webFrame.setCSS(editor.getValue());
+            }
+        });
+        
+        // Also handle keydown for non-printable keys
+        editor.on('change', function (codeMirror, changeObj) {
+            // For auto-closing parentheses and brackets
+            var cursor = editor.getCursor();
+            var line = editor.getLine(cursor.line);
+            
+            // INJECT INTO IFRAME
+            if (type == 'css') {
+                webFrame.setCSS(editor.getValue());
+            }
+            
+            // If text was pasted, check if we should show hints
+            if (changeObj.origin === "paste") {
+                setTimeout(function() {
+                    editor.showHint({
+                        completeSingle: false,
+                        alignWithWord: true
+                    });
+                }, 100);
             }
         });
     };

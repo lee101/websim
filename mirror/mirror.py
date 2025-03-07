@@ -151,17 +151,28 @@ async def mirror_handler(request: Request, fiddle_name: str, base_url: str):
         content = generate_with_claude(f"""{mirrored_url}
 {fiddle_title}
 {fiddle_description}
-Working on this, please provide the full comprehensive html for everything i should put in the body tag - everything using tailwind/inline scripts
-Dont describe the html, just give me the full html only
-""", "<body")
-        content = "<body " + content
-        body = find_text_between_including(content, "<body", "</body>")
-        if not body:
+Please generate a complete HTML representation for this content that would appear within the body of a webpage.
+Include all necessary elements and structure, using Tailwind CSS for styling where appropriate.
+Generate only the HTML content - no explanations or markdown formatting.
+""")
+        
+        # Clean up common issues that might cause the HTML to display as text
+        content = content.replace("```html", "").replace("```", "")
+        
+        # If the content starts with <body, extract just the body content
+        if "<body" in content and "</body>" in content:
+            body = find_text_between_including(content, "<body", "</body>")
+        else:
+            # Otherwise use the entire content
             body = content
     
     if body is None:
         raise HTTPException(status_code=404, detail="Content not found")
+    
+    # Further clean up any HTML escaping that might prevent rendering
     if body:
+        # Replace HTML entity references with actual characters
+        body = body.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&")
         MirroredContent.save(key_name, body)
 
     response = templates.TemplateResponse("templates/genpage.jinja2", {

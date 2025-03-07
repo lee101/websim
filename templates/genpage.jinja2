@@ -21,10 +21,29 @@
 
 </head>
 <body>
-    {{ body }}
+    {{ body | safe }}
 </body>
 
-<script id="webfiddle-js">{{ fiddle.script }}</script>
+{{ request_blocker | safe }}
+<script id="webfiddle-js">
+    // Ensure DOM is ready before executing user scripts
+    document.addEventListener('DOMContentLoaded', function() {
+        try {
+            // Decode HTML entities in the script before execution
+            const scriptContent = `{{ fiddle.script | safe }}`.replace(/&amp;/g, '&')
+                                                           .replace(/&lt;/g, '<')
+                                                           .replace(/&gt;/g, '>')
+                                                           .replace(/&#39;/g, "'")
+                                                           .replace(/&quot;/g, '"');
+            
+            // Execute the script in the context of the page
+            const scriptFunc = new Function(scriptContent);
+            scriptFunc();
+        } catch(e) {
+            console.error('Error executing WebSim script:', e);
+        }
+    });
+</script>
 
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8598649123553748"
      crossorigin="anonymous"></script>

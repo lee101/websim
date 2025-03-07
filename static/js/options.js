@@ -15,9 +15,9 @@ var options = (function ($) {
             self.$fiddleTitle.select();
         }, 100);
 
-        self.setTitle(fiddle.title);
-        self.setDescription(fiddle.description);
-        self.setStartUrl(fiddle.start_url);
+        self.setTitle(fiddle.title || '');
+        self.setDescription(fiddle.description || '');
+        self.setStartUrl(fiddle.start_url || '');
     };
     self.getTitle = function () {
         return self.$fiddleTitle.val();

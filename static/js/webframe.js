@@ -41,13 +41,27 @@ var webFrame = (function ($) {
             url = self.getUrl();
         }
         self.$frame = $('#web-frame');
-        //TODO catch network error?
-
-        self.$frame.html('<div id="web-iframe-loading" class="web-iframe-loading"><i class="web-bigspinner fa fa-spinner fa-spin"></i> </div>' +
-            '<iframe id="web-iframe" name="web-iframe" class="web-iframe" sandbox="allow-same-origin allow-scripts allow-forms allow-pointer-lock"' +
-            ' onLoad="webFrame.onFrameLoad(this)" ' +
-
-            'src="/' + fiddle.title + '-' + fiddle.id + '/' + webutils.removeProtocol(url) + '"></iframe>');
+        
+        // Clean URL for safety and functionality
+        let cleanUrl = url || '';
+        if (cleanUrl && !cleanUrl.includes('://')) {
+            cleanUrl = webutils.removeProtocol(cleanUrl);
+        }
+        
+        const iframeSrc = '/' + fiddle.title + '-' + fiddle.id + '/' + cleanUrl;
+        
+        // Create iframe with proper attributes for content rendering
+        self.$frame.html(
+            '<div id="web-iframe-loading" class="web-iframe-loading">' +
+            '<i class="web-bigspinner fa fa-spinner fa-spin"></i>' +
+            '</div>' +
+            '<iframe id="web-iframe" name="web-iframe" class="web-iframe" ' +
+            'sandbox="allow-same-origin allow-scripts allow-forms allow-pointer-lock" ' +
+            'onLoad="webFrame.onFrameLoad(this)" ' +
+            'src="' + iframeSrc + '" ' +
+            'style="border: none; width: 100%; height: 100%;">' +
+            '</iframe>'
+        );
     };
 
     self.reload = function () {

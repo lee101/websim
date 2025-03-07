@@ -33,8 +33,8 @@ var fiddle = (function ($) {
 
     self.setUp = function (fiddle) {
         if (fiddle) {
-            jsEditor.setValue(fiddle.script);
-            cssEditor.setValue(fiddle.style);
+            jsEditor.setValue(fiddle.script || '');
+            cssEditor.setValue(fiddle.style || '');
             options.setUp(fiddle);
         }
     };
