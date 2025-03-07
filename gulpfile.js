@@ -11,18 +11,18 @@ var htmlmin = require('gulp-htmlmin');
 var concat = require('gulp-concat');
 
 
-gulp.task('less', function () {
-    gulp.src('./static/stylesheets/style.less')
+function compileLess() {
+    return gulp.src('./static/stylesheets/style.less')
         .pipe(sourcemaps.init())
         .pipe(less()).on('error', function (err) {
             gutil.log(err.message);
         })
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('./static/stylesheets'));
-});
+}
 
-gulp.task('nunjucks', function () {
-    gulp.src('./templates/shared/**/*.jinja2')
+function compileNunjucks() {
+    return gulp.src('./templates/shared/**/*.jinja2')
         .pipe(htmlmin())
         .pipe(nunjucks()).on('error', function (err) {
             gutil.log(err.message);
@@ -30,13 +30,15 @@ gulp.task('nunjucks', function () {
         .pipe(sourcemaps.write())
         .pipe(concat('templates.js'))
         .pipe(gulp.dest('./static/js/templates'));
-});
+}
 
-gulp.task('watch', function () {
-    gulp.watch('./static/stylesheets/**/*.less', ['less']);
-    gulp.watch('./templates/shared/**/*.jinja2', ['nunjucks']);
-});
+function watchFiles() {
+    gulp.watch('./static/stylesheets/**/*.less', compileLess);
+    gulp.watch('./templates/shared/**/*.jinja2', compileNunjucks);
+}
 
-gulp.task('default', function () {
-    gulp.start('watch', 'less', 'nunjucks');
-});
+// Export tasks
+gulp.task('less', compileLess);
+gulp.task('nunjucks', compileNunjucks);
+gulp.task('watch', watchFiles);
+gulp.task('default', gulp.series(gulp.parallel(compileLess, compileNunjucks), watchFiles));
