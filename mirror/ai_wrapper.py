@@ -19,7 +19,7 @@ def generate_with_claude(prompt, prefill="", retries=3):
         messages.append({"role": "assistant", "content": prefill})
     data = {
         "messages": messages,
-        "max_tokens": 6024,
+        "max_tokens": 7024,
         "model": "claude-3-7-sonnet-20250219"
     }
 

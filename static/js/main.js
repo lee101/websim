@@ -17,7 +17,7 @@ var main = (function ($) {
 
     // Add fallback for currentSavedFiddle
     if (typeof currentSavedFiddle === 'undefined') {
-        currentSavedFiddle = {
+        window.currentSavedFiddle = {
             id: '',
             title: '',
             description: '',
