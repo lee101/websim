@@ -83,10 +83,10 @@ function getPosition(str, m, i) {
 }
     var fiddle_name = '""" + fiddle_name + """';
     var fiddle_domain = window.location.pathname.substring(0, getPosition(window.location.pathname, '/', 3))
-    if (url.indexOf(fiddle_name) != -1 || ((/.*http.*/.test(url) || /.*\/\/.*/.test(url)) && (url.indexOf(window.location.hostname) == -1))) {
+    if (url.indexOf(fiddle_name) != -1 || ((/.*http.*/.test(url) || /.*\\/\\/.*/.test(url)) && (url.indexOf(window.location.hostname) == -1))) {
         oldOpen.apply(this, arguments);
     }
-    else if (/.*http.*/.test(url) || /.*\/\/.*/.test(url)) {
+    else if (/.*http.*/.test(url) || /.*\\/\\/.*/.test(url)) {
 	var host_index = url.indexOf(window.location.host);
         if (host_index != -1) {
 		//on our url needing fiddle name in the url

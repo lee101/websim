@@ -10,14 +10,14 @@ var main = (function ($) {
         lineNumbers: true,
         lineWrapping: true,
         extraKeys: {"Ctrl-Space": "autocomplete"},
-        theme: "monokai",
+        theme: "default",
         tabMode: 'spaces', // or 'shift'
         viewportMargin: Infinity
     };
 
     // Add fallback for currentSavedFiddle
     if (typeof currentSavedFiddle === 'undefined') {
-        currentSavedFiddle = {
+        window.currentSavedFiddle = {
             id: '',
             title: '',
             description: '',
