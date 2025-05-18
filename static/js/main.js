@@ -71,12 +71,19 @@ var main = (function ($) {
             }
         }, defaultCodeMirrorOptions));
 
+        window.htmlEditor = CodeMirror($('#html-editor')[0], $.extend({
+            mode: "htmlmixed",
+            readOnly: true
+        }, defaultCodeMirrorOptions));
+
         Inlet(jsEditor);
         Inlet(cssEditor);
+        Inlet(htmlEditor);
 
         fiddle.setUp(currentSavedFiddle);
 
         webFrame.setUp(currentSavedFiddle);
+        webFrame.syncHTML();
 
         self.addEditorCompletion(jsEditor, 'js');
         self.addEditorCompletion(cssEditor, 'css');
