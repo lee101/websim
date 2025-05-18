@@ -100,26 +100,57 @@ Ext.onReady(function () {
             },
             {
                 region: 'east',
+                xtype: 'tabpanel',
                 floatable: true,
                 split: true,
                 width: '40%',
                 minWidth: 120,
                 minHeight: 140,
-                html: '<div id="web-frame" class="web-frame"></div>',
-                tools: [
+                items: [
+                    {
+                        title: 'Browser',
+                        itemId: 'browser-tab',
+                        html: '<div id="web-frame" class="web-frame"></div>'
+                    },
+                    {
+                        title: 'HTML',
+                        itemId: 'html-tab',
+                        html: '<div id="html-editor" class="code-editor"></div>'
+                    }
+                ],
+                tbar: [
+                    {
+                        iconCls: 'fa fa-arrow-left',
+                        handler: function () {
+                            if (window.webFrame && window.webFrame.back) {
+                                window.webFrame.back();
+                            }
+                        }
+                    },
+                    {
+                        iconCls: 'fa fa-arrow-right',
+                        handler: function () {
+                            if (window.webFrame && window.webFrame.forward) {
+                                window.webFrame.forward();
+                            }
+                        }
+                    },
                     {
                         xtype: 'textfield',
-//                    fieldLabel: 'URL',
                         allowBlank: false,
                         name: 'current_url',
-                        anchor: '95%',
-                        width: '100%',
-//                        vtype: 'url',
+                        flex: 1,
                         emptyText: 'http://cats.com'
                     }
                 ],
-//                title: '<input type="text" placeholder="www.google.com/*" /> ',
-                title: 'URL'
+                listeners: {
+                    tabchange: function (panel, newCard) {
+                        if (newCard.itemId === 'html-tab' && window.webFrame && window.webFrame.syncHTML) {
+                            window.webFrame.syncHTML();
+                        }
+                    }
+                },
+                title: 'Browser'
             }
         ]
     });

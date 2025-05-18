@@ -69,14 +69,46 @@ var webFrame = (function ($) {
         frames['web-iframe'].window.location.reload();
     };
 
+    self.back = function () {
+        try {
+            frames['web-iframe'].history.back();
+        } catch (e) {
+            console.error('Unable to go back', e);
+        }
+    };
+
+    self.forward = function () {
+        try {
+            frames['web-iframe'].history.forward();
+        } catch (e) {
+            console.error('Unable to go forward', e);
+        }
+    };
+
     self.onFrameLoad = function (iframe) {
         webFrame.setUrl(webFrame.getPath(iframe.contentWindow.location.pathname) +
             iframe.contentWindow.location.search + iframe.contentWindow.location.hash);
         $('#web-iframe-loading').hide();
+        self.syncHTML();
     };
 
     self.setCSS = function (css) {
         frames['web-iframe'].window.document.getElementById('webfiddle-css').innerHTML = css;
+    };
+
+    self.getHTML = function () {
+        try {
+            return frames['web-iframe'].window.document.documentElement.outerHTML;
+        } catch (e) {
+            console.error('Unable to get HTML from iframe', e);
+            return '';
+        }
+    };
+
+    self.syncHTML = function () {
+        if (window.htmlEditor) {
+            window.htmlEditor.setValue(self.getHTML());
+        }
     };
 
 
