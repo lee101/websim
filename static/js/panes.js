@@ -100,26 +100,49 @@ Ext.onReady(function () {
             },
             {
                 region: 'east',
+                xtype: 'tabpanel',
                 floatable: true,
                 split: true,
                 width: '40%',
                 minWidth: 120,
                 minHeight: 140,
-                html: '<div id="web-frame" class="web-frame"></div>',
-                tools: [
-                    {
-                        xtype: 'textfield',
-//                    fieldLabel: 'URL',
-                        allowBlank: false,
-                        name: 'current_url',
-                        anchor: '95%',
-                        width: '100%',
-//                        vtype: 'url',
-                        emptyText: 'http://cats.com'
+                activeTab: 0,
+                listeners: {
+                    tabchange: function(tabPanel, newCard) {
+                        if (newCard.title === 'HTML' && window.htmlEditor) {
+                            window.htmlEditor.refresh();
+                            webFrame.updateHTMLView();
+                        }
                     }
-                ],
-//                title: '<input type="text" placeholder="www.google.com/*" /> ',
-                title: 'URL'
+                },
+                items: [
+                    {
+                        title: 'Preview',
+                        layout: 'fit',
+                        items: [{
+                            xtype: 'component',
+                            html: '<div id="web-frame" class="web-frame"></div>',
+                            flex: 1
+                        }],
+                        tbar: [{
+                            xtype: 'textfield',
+                            allowBlank: false,
+                            name: 'current_url',
+                            anchor: '95%',
+                            width: '100%',
+                            emptyText: 'http://cats.com'
+                        }]
+                    },
+                    {
+                        title: 'HTML',
+                        layout: 'fit',
+                        items: [{
+                            xtype: 'component',
+                            html: '<div id="html-editor" class="code-editor"></div>',
+                            flex: 1
+                        }]
+                    }
+                ]
             }
         ]
     });

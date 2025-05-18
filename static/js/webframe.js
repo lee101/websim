@@ -73,10 +73,26 @@ var webFrame = (function ($) {
         webFrame.setUrl(webFrame.getPath(iframe.contentWindow.location.pathname) +
             iframe.contentWindow.location.search + iframe.contentWindow.location.hash);
         $('#web-iframe-loading').hide();
+        self.updateHTMLView();
     };
 
     self.setCSS = function (css) {
         frames['web-iframe'].window.document.getElementById('webfiddle-css').innerHTML = css;
+    };
+
+    self.getHTML = function () {
+        try {
+            return frames['web-iframe'].document.documentElement.outerHTML;
+        } catch (e) {
+            console.error('Unable to get HTML from iframe:', e);
+            return '';
+        }
+    };
+
+    self.updateHTMLView = function () {
+        if (window.htmlEditor) {
+            window.htmlEditor.setValue(self.getHTML());
+        }
     };
 
 
