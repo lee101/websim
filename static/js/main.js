@@ -71,6 +71,12 @@ var main = (function ($) {
             }
         }, defaultCodeMirrorOptions));
 
+        // Read-only editor to display generated HTML
+        window.htmlEditor = CodeMirror($('#html-editor')[0], $.extend({
+            mode: "htmlmixed",
+            readOnly: true
+        }, defaultCodeMirrorOptions));
+
         Inlet(jsEditor);
         Inlet(cssEditor);
 
