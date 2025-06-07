@@ -1,11 +1,28 @@
 import pytest
-from mirror.ai_wrapper import generate_with_claude
+import sys
+sys.modules['sellerinfo'] = type('obj', (), {'CLAUDE_API_KEY': 'dummy'})
+from mirror import ai_wrapper
 
-def test_generate_with_claude_basic():
+
+class DummyResponse:
+    def __init__(self):
+        self.status_code = 200
+
+    def raise_for_status(self):
+        pass
+
+    def json(self):
+        return {"content": [{"text": "<body>hi</body>"}]}
+
+
+generate_with_claude = ai_wrapper.generate_with_claude
+
+def test_generate_with_claude_basic(monkeypatch):
     prompt = """ https://piano.com/playing-piano-online
 Working on this, please provide the full comprehensive html for everything i should put in the body tag - everything inlined
 Dont describe the html, just give me the full html only
 """
+    monkeypatch.setattr(ai_wrapper, "requests", type("obj", (), {"post": lambda *a, **k: DummyResponse()}))
     response = generate_with_claude(prompt)
     assert isinstance(response, str)
     assert len(response) > 0

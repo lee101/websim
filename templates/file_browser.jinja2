@@ -1,0 +1,50 @@
+{% extends 'templates/layout.jinja2' %}
+
+{% block content %}
+<h1>User Files</h1>
+<input type="file" id="file-input" multiple>
+<button id="upload-btn">Upload</button>
+<progress id="upload-progress" value="0" max="100" style="display:none"></progress>
+<ul id="file-list"></ul>
+<script>
+const userId = '{{ user_id }}';
+function loadFiles() {
+  fetch(`/api/uploads/list?user_id=${userId}`)
+    .then(r => r.json())
+    .then(data => {
+      const ul = document.getElementById('file-list');
+      ul.innerHTML = '';
+      (data.files || []).forEach(f => {
+        const li = document.createElement('li');
+        li.textContent = `${f.key} (${f.size} bytes)`;
+        const del = document.createElement('button');
+        del.textContent = 'Delete';
+        del.onclick = () => {
+          fetch(`/api/uploads/delete?user_id=${userId}&filename=${encodeURIComponent(f.key.split('/').pop())}`, {method:'POST'})
+            .then(()=>loadFiles());
+        };
+        li.appendChild(del);
+        ul.appendChild(li);
+      });
+    });
+}
+
+document.getElementById('upload-btn').addEventListener('click', () => {
+  const files = document.getElementById('file-input').files;
+  Array.from(files).forEach(file => {
+    fetch(`/api/uploads/sign?user_id=${userId}&filename=${encodeURIComponent(file.name)}`)
+      .then(r => r.json())
+      .then(data => {
+        document.getElementById('upload-progress').style.display='block';
+        return fetch(data.url, { method: 'PUT', body: file });
+      })
+      .then(() => {
+        document.getElementById('upload-progress').style.display='none';
+        loadFiles();
+      });
+  });
+});
+
+loadFiles();
+</script>
+{% endblock %}

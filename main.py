@@ -12,6 +12,7 @@ from fastapi.templating import Jinja2Templates
 import fixtures
 from gameon_utils import GameOnUtils
 from mirror.mirror import mirror_router
+from uploads import uploads_router
 from models import Fiddle, default_fiddle
 
 app = FastAPI()
@@ -65,6 +66,13 @@ async def main_handler(request: Request):
 @app.get("/_ah/warmup")
 async def warmup_handler():
     return ""
+
+@app.get("/files/{user_id}", response_class=HTMLResponse)
+async def file_browser(request: Request, user_id: str):
+    return templates.TemplateResponse(
+        "templates/file_browser.jinja2",
+        {"request": request, "user_id": user_id, "title": "Files", "description": "User files"}
+    )
 
 @app.get("/createfiddle")
 async def create_fiddle_handler(request: Request):
@@ -127,6 +135,7 @@ async def slash_murderer(url: str):
     return RedirectResponse(url=f"/{url}")
 
 # Include the mirror router
+app.include_router(uploads_router)
 app.include_router(mirror_router)
 
 if __name__ == "__main__":
